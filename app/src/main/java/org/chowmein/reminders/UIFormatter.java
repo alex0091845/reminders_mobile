@@ -20,8 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 class UIFormatter {
 
     final static int HOME = 0;
-    final static int ADD = 1;
-    final static int EDIT = 2;
+    final static int ADDEDIT = 1;
 
     static int width;
     static int height;
@@ -33,24 +32,10 @@ class UIFormatter {
         height = dm.heightPixels;
 
         if(activityId == HOME) formatHome(activity);
-        else if(activityId == ADD) formatAdd(activity);
-        else if(activityId == EDIT) formatEdit(activity);
+        else if(activityId == ADDEDIT) formatAddEdit(activity);
     }
 
-    private static void formatEdit(Activity activity) {
-        TextView tvDate = activity.findViewById(R.id.tv_date_edit);
-        setMarginAndWidth(tvDate);
-        Button btnDate = activity.findViewById(R.id.btn_date_edit);
-        setMarginAndWidth(btnDate);
-        TextView tvDesc = activity.findViewById(R.id.tv_desc_edit);
-        setMarginAndWidth(tvDesc);
-        EditText edtDesc = activity.findViewById(R.id.edt_desc_edit);
-        setMarginAndWidth(edtDesc);
-        EditText edtDbr = activity.findViewById(R.id.edt_dbr_edit);
-        setMarginAndWidth(edtDbr);
-    }
-
-    private static void formatAdd(Activity activity) {
+    private static void formatAddEdit(Activity activity) {
         TextView tvDate = activity.findViewById(R.id.tv_date);
         setMarginAndWidth(tvDate);
         Button btnDate = activity.findViewById(R.id.btn_date);
@@ -59,7 +44,7 @@ class UIFormatter {
         setMarginAndWidth(tvDesc);
         EditText edtDesc = activity.findViewById(R.id.edt_desc);
         setMarginAndWidth(edtDesc);
-        EditText edtDbr = activity.findViewById(R.id.edt_dbr);;
+        EditText edtDbr = activity.findViewById(R.id.edt_dbr);
         setMarginAndWidth(edtDbr);
     }
 

@@ -6,18 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void onBtnAddClicked() {
-        final Intent addActIntent = new Intent(HomeActivity.this, AddActivity.class);
+        final Intent addActIntent = new Intent(HomeActivity.this, EventFormActivity.class);
         addActIntent.putExtra("requestCode", ADD_REQUEST_CODE);
         startActivityForResult(addActIntent, ADD_REQUEST_CODE);
     }

@@ -34,8 +34,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import static androidx.core.app.ActivityCompat.startActivityForResult;
-
 class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private SortedList<Event> eventList;
@@ -122,7 +120,7 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
         }
 
         private void editEvent(HomeActivity home) {
-            Intent editActivity = new Intent(home, EditActivity.class);
+            Intent editActivity = new Intent(home, EventFormActivity.class);
             editActivity.putExtra("requestCode", HomeActivity.EDIT_REQUEST_CODE);
 
             // gets the event corresponding to the clicked view
@@ -148,7 +146,6 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
         private void selectEvent(View view) {
             Event event = EventAdapter.this.get(this.getAdapterPosition());
             event.setSelected(!event.isSelected());
-            System.out.println(event.isSelected());
             setStyle(this, event);
         }
 

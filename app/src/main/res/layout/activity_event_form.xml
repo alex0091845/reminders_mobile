@@ -5,16 +5,16 @@
     android:id="@+id/cl_add"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditActivity">
+    tools:context=".EventFormActivity">
 
     <TextView
-        android:id="@+id/tv_reminder_edit"
+        android:id="@+id/tv_title_event_form"
         android:layout_width="0dp"
         android:layout_height="65dp"
         android:background="@drawable/header_bar"
         android:fontFamily="sans-serif"
         android:gravity="center"
-        android:text="Edit reminder"
+        android:text="Add a reminder"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_date_edit"
+        android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
@@ -32,10 +32,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_reminder_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_event_form" />
 
     <TextView
-        android:id="@+id/tv_desc_edit"
+        android:id="@+id/tv_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
@@ -45,10 +45,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_date_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_date" />
 
     <TextView
-        android:id="@+id/tv_dbr_edit"
+        android:id="@+id/tv_dbr"
         android:layout_width="246dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
@@ -58,47 +58,53 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_desc_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_desc" />
 
     <EditText
-        android:id="@+id/edt_desc_edit"
+        android:id="@+id/edt_desc"
         android:layout_width="355dp"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/input_text"
+        android:ellipsize="none"
         android:ems="10"
         android:gravity="start|top"
-        android:inputType="textMultiLine"
+        android:inputType="text"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:scrollHorizontally="false"
+        android:singleLine="false"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_desc_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
 
     <EditText
-        android:id="@+id/edt_dbr_edit"
+        android:id="@+id/edt_dbr"
         android:layout_width="355dp"
         android:layout_height="50dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/input_text"
         android:ems="10"
-        android:hint="ex. 5"
         android:inputType="number"
         android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_dbr_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_dbr" />
 
     <Button
-        android:id="@+id/btn_submit_edit"
+        android:id="@+id/btn_submit"
         android:layout_width="355dp"
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/button"
-        android:text="Edit"
+        android:text="Add"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -106,14 +112,15 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btn_date_edit"
+        android:id="@+id/btn_date"
         android:layout_width="355dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/input_text"
         android:text="6/25/2020"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_date_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_date" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
