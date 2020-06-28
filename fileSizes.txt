@@ -1,0 +1,2 @@
+With both EditActivity and AddActivity: 19.31MB
+With only one Activity acting as both : 

@@ -1,0 +1,12 @@
+[
+  {
+    "date": "2019-09-15",
+    "description": "testArrayAdd",
+    "dbr": 3
+  },
+  {
+    "date": "2019-09-16",
+    "description": "testArrayAdd1",
+    "dbr": 4
+  }
+]
