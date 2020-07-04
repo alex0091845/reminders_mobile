@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -23,14 +24,21 @@ public class HomeActivity extends AppCompatActivity {
     final static int ADD_REQUEST_CODE = 0;
     final static int EDIT_REQUEST_CODE = 1;
 
+    public EventAdapter getAdapter() {
+        return adapter;
+    }
+
     EventAdapter adapter;
     File saveFile;
     boolean selectMode;
+    private static Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        HomeActivity.ctx = this;
 
         try {
             this.getSupportActionBar().hide();
@@ -38,7 +46,8 @@ public class HomeActivity extends AppCompatActivity {
 
         initViews();
 
-        saveFile = new File(this.getFilesDir(), "saveFile.json");
+        System.out.println(this.getApplicationInfo().dataDir);
+        saveFile = new File(this.getFilesDir().getPath(), "saveFile.json");
 
         this.adapter = new EventAdapter(this);
         this.adapter.addAll(JsonHelper.deserialize(saveFile));
@@ -78,6 +87,12 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        JsonHelper.serialize(this.adapter.getEventList(), this.saveFile);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         JsonHelper.serialize(this.adapter.getEventList(), this.saveFile);
     }
 
@@ -139,5 +154,9 @@ public class HomeActivity extends AppCompatActivity {
             TextView title = this.findViewById(R.id.tv_title);
             title.setText("Reminders");
         }
+    }
+
+    public static Context getContext() {
+        return ctx;
     }
 }

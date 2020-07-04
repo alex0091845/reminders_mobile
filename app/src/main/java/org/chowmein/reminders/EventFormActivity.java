@@ -12,6 +12,7 @@ package org.chowmein.reminders;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -103,7 +104,7 @@ public class EventFormActivity extends AppCompatActivity {
         // set each input field to have the corresponding values of those properties
         this.btn_date.setText(dateStr);
         this.edt_desc.setText(desc);
-        this.edt_dbr.setText("" + dbr);
+        this.edt_dbr.setText(dbr + "");
     }
 
     private void onSubmitButtonClicked() {
@@ -115,6 +116,7 @@ public class EventFormActivity extends AppCompatActivity {
         String dbrStr = ((TextView)findViewById(R.id.edt_dbr)).getText().toString();
 
         if(!validateFields(desc, dbrStr)) return;
+        if(duplicate(dateStr, desc, dbrStr)) return;
 
         int dbr = Integer.parseInt(dbrStr);
 
@@ -136,6 +138,24 @@ public class EventFormActivity extends AppCompatActivity {
 
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    private boolean duplicate(String dateStr, String desc, String dbrStr) {
+        DateFormat format = new SimpleDateFormat("M/d/yyyy");
+        Date date = new Date();
+        try {
+            date = format.parse(dateStr);
+        } catch (Exception e) {};
+
+        int dbr = Integer.parseInt(dbrStr);
+        Event event = new Event(date, desc, dbr);
+        int eventIndex = ((HomeActivity)HomeActivity.getContext()).getAdapter().getEventList()
+                .indexOf(event);
+        if(eventIndex > -1) {
+            alertDuplicateEvent();
+            return true;
+        }
+        return false;
     }
 
     private void onDateButtonClicked() {
@@ -168,15 +188,35 @@ public class EventFormActivity extends AppCompatActivity {
     }
 
     private boolean validateFields(String desc, String dbrStr) {
-        if(desc == null || desc.isEmpty() || dbrStr.isEmpty() || Integer.parseInt(dbrStr) < 0) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this)
-                    .setTitle("Invalid inputs")
-                    .setMessage("Your inputs for one or more fields is invalid")
-                    .setPositiveButton("OK", null);
+        try {
+            Integer.parseInt(dbrStr);
+        } catch (Exception e) {
+            this.alertInvalidFields();
+            return false;
+        }
 
-            AlertDialog dialog = dialogBuilder.show();
+        if(desc == null || desc.isEmpty() || dbrStr.isEmpty()) {
+            this.alertInvalidFields();
             return false;
         }
         return true;
+    }
+
+    private void alertInvalidFields() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this)
+                .setTitle("Invalid inputs")
+                .setMessage("Your inputs for one or more fields is invalid")
+                .setPositiveButton("OK", null);
+
+        AlertDialog dialog = dialogBuilder.show();
+    }
+
+    private void alertDuplicateEvent() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this)
+                .setTitle("Duplicate event")
+                .setMessage("Your already have this event!")
+                .setPositiveButton("OK", null);
+
+        AlertDialog dialog = dialogBuilder.show();
     }
 }
