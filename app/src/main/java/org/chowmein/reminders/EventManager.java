@@ -5,10 +5,13 @@ package org.chowmein.reminders;
  */
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import java.io.File;
@@ -19,21 +22,32 @@ import java.util.concurrent.TimeUnit;
 class EventManager {
     private static ArrayList<Event> reminders;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void remind(Context context) {
         filterReminders(context);
         if(reminders == null) return;
 
+        NotificationManager notifMngr = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+
         int id = 0;
         for(Event e : reminders) {
-            final String CHANNEL_ID = e.toString();
-            Notification reminder = new NotificationCompat.Builder(context, CHANNEL_ID)
+            String eId = e.toString();
+            CharSequence name = "On boot";
+            String description = "Remind events on boot";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel channel = new NotificationChannel(eId, name, importance);
+            channel.setDescription(description);
+
+            notifMngr.createNotificationChannel(channel);
+
+            Notification reminder = new NotificationCompat.Builder(context, eId)
                     .setSmallIcon(R.drawable.button)
                     .setContentTitle(e.getDesc())
                     .setContentText("In " + e.getDbr() + " days")
                     .build();
-            NotificationManager manager = (NotificationManager)
-                    context.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.notify(id, reminder);
+            notifMngr.notify(id, reminder);
             id++;
         }
     }
