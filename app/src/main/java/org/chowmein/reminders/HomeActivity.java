@@ -1,5 +1,6 @@
 package org.chowmein.reminders;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,16 +47,31 @@ public class HomeActivity extends AppCompatActivity {
 
         initViews();
 
-        System.out.println(this.getApplicationInfo().dataDir);
         saveFile = new File(this.getFilesDir().getPath(), "saveFile.json");
 
         this.adapter = new EventAdapter(this);
         this.adapter.addAll(JsonHelper.deserialize(saveFile));
 
+        // sets up the reminders recyclerview
         RecyclerView rv_reminders = findViewById(R.id.rv_reminders);
         rv_reminders.setHasFixedSize(true);
         rv_reminders.setLayoutManager(new LinearLayoutManager(this));
         rv_reminders.setAdapter(this.adapter);
+
+        rv_reminders.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    System.out.println("draggin along here");
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     private void initViews() {
@@ -75,7 +91,6 @@ public class HomeActivity extends AppCompatActivity {
         SortedList<Event> list = this.adapter.getEventList();
         int size = list.size();
         for(int i = 0; i < list.size(); i++) {
-            System.out.println(i);
             if(list.get(i).isSelected()) {
                 this.adapter.removeAtIndex(i);
                 i--;
