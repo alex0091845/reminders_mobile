@@ -59,7 +59,7 @@ public class EventFormActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        // Here, the onSubmitButtonCLicked() method acts for both add and edit
+        // Here, the onSubmitButtonClicked() method acts for both add and edit
         // buttons. Their code only differed by 1 line, so I used the requestCode
         // to differentiate them.
 
@@ -148,6 +148,8 @@ public class EventFormActivity extends AppCompatActivity {
         } catch (Exception e) {};
 
         int dbr = Integer.parseInt(dbrStr);
+
+        // in edit, maybe remove the event first and then add it?
         Event event = new Event(date, desc, dbr);
         int eventIndex = ((HomeActivity)HomeActivity.getContext()).getAdapter().getEventList()
                 .indexOf(event);

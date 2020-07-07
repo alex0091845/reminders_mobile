@@ -1,8 +1,18 @@
 package org.chowmein.reminders;
 
+/**
+ * ------------------------------------------References---------------------------------------------
+ * ItemDecoration (setting each item's margins)
+ * https://medium.com/mobile-app-development-publication/right-way-of-setting-margin-on-recycler-views-cell-319da259b641
+ * Settings/Preferences:
+ * https://stackoverflow.com/questions/39439039/how-to-add-overflow-menu-to-toolbar
+ * https://alvinalexander.com/android/android-tutorial-preferencescreen-preferenceactivity-preferencefragment/
+ */
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
@@ -10,8 +20,11 @@ import androidx.recyclerview.widget.SortedList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -41,9 +54,8 @@ public class HomeActivity extends AppCompatActivity {
 
         HomeActivity.ctx = this;
 
-        try {
-            this.getSupportActionBar().hide();
-        } catch (Exception e) {}
+        Toolbar toolbar = (Toolbar) this.findViewById(R.id.tb_title);
+        setSupportActionBar(toolbar);
 
         initViews();
 
@@ -52,26 +64,16 @@ public class HomeActivity extends AppCompatActivity {
         this.adapter = new EventAdapter(this);
         this.adapter.addAll(JsonHelper.deserialize(saveFile));
 
+        Preferences.loadPreferences(this);
+
         // sets up the reminders recyclerview
         RecyclerView rv_reminders = findViewById(R.id.rv_reminders);
         rv_reminders.setHasFixedSize(true);
         rv_reminders.setLayoutManager(new LinearLayoutManager(this));
         rv_reminders.setAdapter(this.adapter);
 
-        rv_reminders.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if(newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    System.out.println("draggin along here");
-                }
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
+        EventItemDecoration itemDeco = new EventItemDecoration(10);
+        rv_reminders.addItemDecoration(itemDeco);
     }
 
     private void initViews() {
@@ -79,6 +81,25 @@ public class HomeActivity extends AppCompatActivity {
         btn_add.setOnClickListener(e -> onBtnAddClicked());
         FloatingActionButton btn_del = findViewById(R.id.btn_delete);
         btn_del.setOnClickListener(e -> onBtnDelClicked());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings: {
+                Intent settingsActIntent = new Intent(HomeActivity.this, SettingsActivity.class);
+                startActivity(settingsActIntent);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void onBtnAddClicked() {
@@ -112,6 +133,22 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        // if preferences have changed, then
+        if(Preferences.prefsChanged) {
+            // reset it so we don't detect it again
+            Preferences.prefsChanged = false;
+
+            // notify the user that to re-open the app to see the changes
+            Toast.makeText(this,
+                    "Please close and re-open the app to see the changes.",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -123,12 +160,13 @@ public class HomeActivity extends AppCompatActivity {
             int dbr = bundle.getInt("dbr");
             Date date = null;
 
-            DateFormat format = new SimpleDateFormat("M/d/yyyy");
+            DateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
             try {
-                date = format.parse(format.format(bundle.getLong("date")));
+                date = dateFormat.parse(dateFormat.format(bundle.getLong("date")));
             } catch (Exception e) {}
 
             Event event = new Event(date, desc, dbr);
+
             if(requestCode == ADD_REQUEST_CODE) this.adapter.add(event);
             else if(requestCode == EDIT_REQUEST_CODE) {
                 int eventPosition = bundle.getInt("eventPos");
@@ -159,15 +197,15 @@ public class HomeActivity extends AppCompatActivity {
             this.findViewById(R.id.btn_add).setVisibility(View.INVISIBLE);
             this.findViewById(R.id.btn_delete).setVisibility(View.VISIBLE);
 
-            TextView title = this.findViewById(R.id.tv_title);
-            title.setText("Delete reminders");
+            Toolbar title = this.findViewById(R.id.tb_title);
+            title.setTitle("Delete reminders");
         } else {
             this.selectMode = false;
             this.findViewById(R.id.btn_add).setVisibility(View.VISIBLE);
             this.findViewById(R.id.btn_delete).setVisibility(View.INVISIBLE);
 
-            TextView title = this.findViewById(R.id.tv_title);
-            title.setText("Reminders");
+            Toolbar title = this.findViewById(R.id.tb_title);
+            title.setTitle("Reminders");
         }
     }
 

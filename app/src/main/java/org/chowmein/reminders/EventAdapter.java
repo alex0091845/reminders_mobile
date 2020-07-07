@@ -13,10 +13,10 @@ package org.chowmein.reminders;
  * https://medium.com/@droidbyme/android-recyclerview-with-single-and-multiple-selection-5d50c0c4c739
  */
 
-// import android.content.Context;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +27,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
@@ -93,18 +94,18 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener{
         Event event;
-        // public CheckBox cb_select;
         TextView tv_desc;
         TextView tv_date;
         TextView tv_dbr;
+        TextView tv_year;
         ConstraintLayout cl_list_item;
 
         EventViewHolder(View eventView) {
             super(eventView);
-            // cb_select = eventView.findViewById(R.id.cb_select);
             tv_desc = eventView.findViewById(R.id.tv_event_desc);
             tv_date = eventView.findViewById(R.id.tv_event_date);
             tv_dbr = eventView.findViewById(R.id.tv_event_dbr);
+            tv_year = eventView.findViewById(R.id.tv_event_year);
             cl_list_item = eventView.findViewById(R.id.cl_list_item);
             eventView.setOnClickListener(this);
             eventView.setOnLongClickListener(this);
@@ -144,7 +145,8 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
         }
 
         private void selectEvent(View view) {
-            Event event = EventAdapter.this.get(this.getAdapterPosition());
+            int adptrPos = this.getAdapterPosition();
+            Event event = EventAdapter.this.get(adptrPos);
             event.setSelected(!event.isSelected());
             setStyle(this, event);
         }
@@ -171,7 +173,12 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
         return new EventViewHolder(view);
     }
 
-    private void setStyle(EventViewHolder holder, Event event) {
+    public void setStyle(EventViewHolder holder, Event event) {
+        holder.tv_desc.setTextSize(Preferences.fontSize);
+        holder.tv_date.setTextSize(Preferences.fontSize);
+        holder.tv_dbr.setTextSize(Preferences.fontSize - 8);
+        holder.tv_year.setTextSize(Preferences.fontSize - 8);
+
         // set style based on position
         if (event.isSelected()) {
             holder.cl_list_item.setBackground(ContextCompat.getDrawable(context, R.drawable.item_bg_blue));
@@ -179,6 +186,7 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
             holder.tv_desc.setTextColor(white);
             holder.tv_date.setTextColor(white);
             holder.tv_dbr.setTextColor(white);
+            holder.tv_year.setTextColor(white);
         }
         else if (holder.getAdapterPosition() % 2 == 1) {
             holder.cl_list_item.setBackground(ContextCompat.getDrawable(context, R.drawable.item_bg_gray));
@@ -186,12 +194,14 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
             holder.tv_desc.setTextColor(darkGray);
             holder.tv_date.setTextColor(darkGray);
             holder.tv_dbr.setTextColor(darkGray);
+            holder.tv_year.setTextColor(darkGray);
         } else {
             holder.cl_list_item.setBackground(ContextCompat.getDrawable(context, R.drawable.item_bg_red));
             int white = Color.parseColor("#FFFFFF");
             holder.tv_desc.setTextColor(white);
             holder.tv_date.setTextColor(white);
             holder.tv_dbr.setTextColor(white);
+            holder.tv_year.setTextColor(white);
         }
     }
 
@@ -199,11 +209,22 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
         holder.event = event;
+
+        // sets the easy data textviews
         holder.tv_desc.setText(event.getDesc());
-        DateFormat format = new SimpleDateFormat("M/d"); // format to only month and day
-        String dateStr = format.format(event.getDate());
-        holder.tv_date.setText(dateStr);
         holder.tv_dbr.setText(event.getDbr() + " days before");
+
+        // sets the date textview
+        DateFormat dateFormat = new SimpleDateFormat("M/d"); // format to only month and day
+        String dateStr = dateFormat.format(event.getDate());
+        holder.tv_date.setText(dateStr);
+
+        // sets the year textview
+        DateFormat yearFormat = new SimpleDateFormat("yyyy");
+        String yearStr = yearFormat.format(event.getDate());
+        holder.tv_year.setText(yearStr);
+
+        // sets the style of the viewHolder
         setStyle(holder, event);
     }
 
