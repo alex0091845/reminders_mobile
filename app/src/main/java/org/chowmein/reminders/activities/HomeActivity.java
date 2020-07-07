@@ -1,4 +1,4 @@
-package org.chowmein.reminders;
+package org.chowmein.reminders.activities;
 
 /**
  * ------------------------------------------References---------------------------------------------
@@ -23,10 +23,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.chowmein.reminders.Event;
+import org.chowmein.reminders.EventAdapter;
+import org.chowmein.reminders.EventItemDecoration;
+import org.chowmein.reminders.JsonHelper;
+import org.chowmein.reminders.Preferences;
+import org.chowmein.reminders.R;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -35,8 +41,8 @@ import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity {
 
-    final static int ADD_REQUEST_CODE = 0;
-    final static int EDIT_REQUEST_CODE = 1;
+    public final static int ADD_REQUEST_CODE = 0;
+    public final static int EDIT_REQUEST_CODE = 1;
 
     public EventAdapter getAdapter() {
         return adapter;
@@ -44,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
 
     EventAdapter adapter;
     File saveFile;
-    boolean selectMode;
+    public boolean selectMode;
     private static Context ctx;
 
     @Override

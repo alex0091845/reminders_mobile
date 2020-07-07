@@ -16,7 +16,6 @@ package org.chowmein.reminders;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,15 +26,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
+
+import org.chowmein.reminders.activities.EventFormActivity;
+import org.chowmein.reminders.activities.HomeActivity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private SortedList<Event> eventList;
     private Context context;
@@ -174,10 +175,19 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     }
 
     public void setStyle(EventViewHolder holder, Event event) {
+        if(event.isYearTop()) {
+            holder.tv_year.setVisibility(View.VISIBLE);
+            DateFormat yearFormat = new SimpleDateFormat("yyyy");
+            String yearStr = yearFormat.format(event.getDate());
+            holder.tv_year.setText(yearStr);
+        } else {
+            holder.tv_year.setVisibility(View.GONE);
+        }
+
         holder.tv_desc.setTextSize(Preferences.fontSize);
         holder.tv_date.setTextSize(Preferences.fontSize);
         holder.tv_dbr.setTextSize(Preferences.fontSize - 8);
-        holder.tv_year.setTextSize(Preferences.fontSize - 8);
+        holder.tv_year.setTextSize(Preferences.fontSize - 4);
 
         // set style based on position
         if (event.isSelected()) {
@@ -186,7 +196,6 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
             holder.tv_desc.setTextColor(white);
             holder.tv_date.setTextColor(white);
             holder.tv_dbr.setTextColor(white);
-            holder.tv_year.setTextColor(white);
         }
         else if (holder.getAdapterPosition() % 2 == 1) {
             holder.cl_list_item.setBackground(ContextCompat.getDrawable(context, R.drawable.item_bg_gray));
@@ -194,14 +203,12 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
             holder.tv_desc.setTextColor(darkGray);
             holder.tv_date.setTextColor(darkGray);
             holder.tv_dbr.setTextColor(darkGray);
-            holder.tv_year.setTextColor(darkGray);
         } else {
             holder.cl_list_item.setBackground(ContextCompat.getDrawable(context, R.drawable.item_bg_red));
             int white = Color.parseColor("#FFFFFF");
             holder.tv_desc.setTextColor(white);
             holder.tv_date.setTextColor(white);
             holder.tv_dbr.setTextColor(white);
-            holder.tv_year.setTextColor(white);
         }
     }
 
@@ -223,6 +230,21 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
         DateFormat yearFormat = new SimpleDateFormat("yyyy");
         String yearStr = yearFormat.format(event.getDate());
         holder.tv_year.setText(yearStr);
+
+        // if the event before this is of a different year, set its yearTop to true
+        // or if the event is the first
+        if (position == 0) {
+            event.setYearTop(true);
+        } else {
+            Event previousEvent = eventList.get(position - 1);
+            String prevYearStr = yearFormat.format(previousEvent.getDate());
+            int prevYear = Integer.parseInt(prevYearStr);
+            int currYear = Integer.parseInt(yearStr);
+            if(prevYear < currYear) {
+                System.out.println(event + "'s setYearTop is set to true because " + prevYear + " < " + currYear);
+                event.setYearTop(true);
+            }
+        }
 
         // sets the style of the viewHolder
         setStyle(holder, event);

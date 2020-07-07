@@ -10,14 +10,14 @@ import androidx.preference.PreferenceManager;
  * and instead just assigns each preference to its own public static variable for other
  * classes to access globally. The method loadPreferences(Context) must be called first.
  */
-class Preferences {
+public class Preferences {
 
     static Context context;
 
     /* indicating whether any prefs have changed. This will be set in the onCreate() callback
     * of the SettingsActivity, and set again to true in the onPreferenceChanged() in its inner
     * class, SettingsFragment. */
-    static boolean prefsChanged;
+    public static boolean prefsChanged;
 
     public static int fontSize;
 

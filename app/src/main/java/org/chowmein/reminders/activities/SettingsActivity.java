@@ -1,4 +1,4 @@
-package org.chowmein.reminders;
+package org.chowmein.reminders.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+
+import org.chowmein.reminders.Preferences;
+import org.chowmein.reminders.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

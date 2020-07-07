@@ -1,4 +1,4 @@
-package org.chowmein.reminders;
+package org.chowmein.reminders.activities;
 
 /**
  * Resources: Baeldung -- getting year, month, dayOfMonth from Date API
@@ -12,7 +12,6 @@ package org.chowmein.reminders;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +19,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.chowmein.reminders.Event;
+import org.chowmein.reminders.R;
+import org.chowmein.reminders.UIFormatter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

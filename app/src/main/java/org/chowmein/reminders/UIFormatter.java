@@ -16,20 +16,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.preference.Preference;
 
-class UIFormatter {
+public class UIFormatter {
 
-    final static int HOME = 0;
-    final static int ADDEDIT = 1;
+    public final static int HOME = 0;
+    public final static int ADDEDIT = 1;
 
     final static int TEXTVIEW_OFFSET = 2;
     final static int INPUT_OFFSET = 4;
+    final static int SIDE_MARGINS = 20;
+    final static int LEFT_MARGIN = 10;
 
     static int width;
     static int height;
 
-    static void format(Activity activity, int activityId) {
+    public static void format(Activity activity, int activityId) {
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         width = dm.widthPixels;
@@ -70,11 +71,11 @@ class UIFormatter {
 
     private static void setMarginAndWidthAddEdit(View v) {
         ConstraintLayout.LayoutParams cl = (ConstraintLayout.LayoutParams) v.getLayoutParams();
-        cl.leftMargin = width / 20;
-        cl.width = width - (width / 10);
+        cl.leftMargin = width / SIDE_MARGINS;
+        cl.width = width - (width / LEFT_MARGIN);
     }
 
-    private static void formatHome(Activity activity) {
+    public static void formatHome(Activity activity) {
 
     }
 }

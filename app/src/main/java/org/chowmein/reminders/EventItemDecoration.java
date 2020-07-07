@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-class EventItemDecoration extends RecyclerView.ItemDecoration {
+public class EventItemDecoration extends RecyclerView.ItemDecoration {
     int spacing;
 
     public EventItemDecoration(int spacing) {

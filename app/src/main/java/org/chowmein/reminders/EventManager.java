@@ -1,11 +1,11 @@
 package org.chowmein.reminders;
 
 /**
- * Calculate difference between days
+ * Calculate difference between days:
  * https://stackoverflow.com/questions/42553017/android-calculate-days-between-two-dates/48706121#:~:text=startDateValue%20%3D%20new%20Date(startDate)%3B,24)%20%2B%201%3B%20Log.
  * Notification:
  * https://stackoverflow.com/questions/45668079/notificationchannel-issue-in-android-o#:~:text=2%20Answers&text=If%20you%20target%20Android%20O,need%20to%20create%20a%20NotificationChannel.
- * Supporting different APIs/platforms
+ * Supporting different APIs/platforms:
  * https://developer.android.com/training/basics/supporting-devices/platforms
  */
 
@@ -18,6 +18,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.recyclerview.widget.SortedList;
 
 import java.io.File;
 import java.util.ArrayList;

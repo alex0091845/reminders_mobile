@@ -2,61 +2,70 @@ package org.chowmein.reminders;
 
 import java.util.Date;
 
-class Event {
-  private Date date;
-  private String desc;
-  private int dbr;
-  private boolean isSelected;
+public class Event {
+    private Date date;
+    private String desc;
+    private int dbr;
+    private boolean isSelected;
+    private boolean yearTop;     /* indicates whether it's the first event of the year or not */
 
-  public Event(Date date, String desc, int dbr) {
-    this.date = date;
-    this.desc = desc;
-    this.dbr = dbr;
-  }
+    public Event(Date date, String desc, int dbr) {
+        this.date = date;
+        this.desc = desc;
+        this.dbr = dbr;
+    }
 
-  public Date getDate() {
-    return date;
-  }
-  
-  public void setDate(Date date) {
-    this.date = date;
-  }
+    public Date getDate() {
+      return date;
+    }
 
-  public int getDbr() {
-    return dbr;
-  }
+    public void setDate(Date date) {
+      this.date = date;
+    }
 
-  public void setDbr(int dbr) {
-    this.dbr = dbr;
-  }
+    public int getDbr() {
+      return dbr;
+    }
 
-  public String getDesc() {
-    return desc;
-  }
+    public void setDbr(int dbr) {
+      this.dbr = dbr;
+    }
 
-  public void setDesc(String desc) {
-    this.desc = desc;
-  }
+    public String getDesc() {
+      return desc;
+    }
 
-  public boolean isSelected() { return this.isSelected; }
+    public void setDesc(String desc) {
+      this.desc = desc;
+    }
 
-  public void setSelected(boolean selected) { this.isSelected = selected; }
+    public boolean isSelected() { return this.isSelected; }
 
-  @Override
-  public boolean equals(Object o) {
-    if(this == o) return true;
-    if(o == null || !(o instanceof Event)) return false;
+    public void setSelected(boolean selected) { this.isSelected = selected; }
 
-    Event other = (Event) o;
-    return date.equals(other.getDate()) &&
-           desc.equals(other.getDesc()) &&
-           dbr == other.getDbr();
-  }
+    public boolean isYearTop() {
+        return this.yearTop;
+    }
 
-  @Override
-  public String toString() {
-      return "date: " + this.date +
-             ", desc: " + this.desc +
-             ", dbr: " + this.dbr;
-  }
+    public void setYearTop(boolean yearTop) {
+        this.yearTop = yearTop;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || !(o instanceof Event)) return false;
+
+        Event other = (Event) o;
+        return date.equals(other.getDate()) &&
+               desc.equals(other.getDesc()) &&
+               dbr == other.getDbr();
+    }
+
+    @Override
+    public String toString() {
+        return "date: " + this.date +
+               ", desc: " + this.desc +
+               ", dbr: " + this.dbr;
+    }
 }

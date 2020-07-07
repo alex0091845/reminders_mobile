@@ -21,8 +21,8 @@ import java.util.Date;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-class JsonHelper {
-    static ArrayList<Event> deserialize(File file) {
+public class JsonHelper {
+    public static ArrayList<Event> deserialize(File file) {
         if(!file.exists()) {
             System.out.println("file doesn't exist");
             return null;
@@ -66,7 +66,7 @@ class JsonHelper {
         }
     }
 
-    static void serialize(SortedList<Event> list, File file) {
+    public static void serialize(SortedList<Event> list, File file) {
         if(!file.exists()) {
             try {
                 file.createNewFile();
