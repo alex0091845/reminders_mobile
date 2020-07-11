@@ -19,14 +19,13 @@
             android:max="25"
             app:iconSpaceReserved="false" />
 
-<!--        <ListPreference-->
-<!--            app:defaultValue="reply"-->
-<!--            app:entries="@array/reply_entries"-->
-<!--            app:entryValues="@array/reply_values"-->
-<!--            app:key="reply"-->
-<!--            app:title="@string/reply_title"-->
-<!--            app:useSimpleSummaryProvider="true"-->
-<!--            app:iconSpaceReserved="false" />-->
+        <Preference
+            app:title="Remind ringtone"
+            app:key="ringtone"
+            app:summary="@string/ringtone_name"
+            app:persistent="true"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 

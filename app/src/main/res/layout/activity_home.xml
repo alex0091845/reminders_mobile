@@ -12,16 +12,18 @@
         android:id="@+id/btn_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
         android:clickable="true"
         android:src="@android:drawable/ic_menu_delete"
         android:visibility="invisible"
         app:backgroundTint="#FF4646"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.912"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tb_title"
-        app:layout_constraintVertical_bias="0.946"
+        app:layout_constraintVertical_bias="1.0"
         app:maxImageSize="18dp"
         app:useCompatPadding="false" />
 
@@ -29,16 +31,18 @@
         android:id="@+id/btn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
         android:clickable="true"
         android:src="@drawable/add_icon"
         android:visibility="visible"
         app:backgroundTint="#FF4646"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.912"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tb_title"
-        app:layout_constraintVertical_bias="0.946"
+        app:layout_constraintVertical_bias="1.0"
         app:maxImageSize="18dp"
         app:useCompatPadding="false" />
 
@@ -49,7 +53,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tb_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_home_year" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_title"
@@ -64,5 +68,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Reminders" />
+
+    <TextView
+        android:id="@+id/tv_home_year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2020"
+        android:textColor="#393939"
+        android:textAlignment="center"
+        android:paddingTop="7dp"
+        android:paddingBottom="3dp"
+        android:background="#F2F2F2"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tb_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

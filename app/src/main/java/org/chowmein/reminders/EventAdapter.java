@@ -20,7 +20,6 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-// import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,7 +44,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public EventAdapter(Context context) {
         this.context = context;
         this.view = ((Activity)context).findViewById(R.id.rv_reminders);
-        this.eventList = new SortedList<Event>(Event.class, new SortedList.Callback<Event>() {
+        this.eventList = new SortedList<>(Event.class, new SortedList.Callback<Event>() {
             @Override
             public int compare(Event o1, Event o2) {
                 int dateComp = o1.getDate().compareTo(o2.getDate());
@@ -233,16 +232,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         // if the event before this is of a different year, set its yearTop to true
         // or if the event is the first
-        if (position == 0) {
-            event.setYearTop(true);
-        } else {
+        if (position != 0) {
             Event previousEvent = eventList.get(position - 1);
             String prevYearStr = yearFormat.format(previousEvent.getDate());
             int prevYear = Integer.parseInt(prevYearStr);
             int currYear = Integer.parseInt(yearStr);
             if(prevYear < currYear) {
-                System.out.println(event + "'s setYearTop is set to true because " + prevYear + " < " + currYear);
                 event.setYearTop(true);
+            } else {
+                event.setYearTop(false);
             }
         }
 

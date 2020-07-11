@@ -17,18 +17,20 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import org.chowmein.reminders.activities.HomeActivity;
+
 public class UIFormatter {
 
     public final static int HOME = 0;
     public final static int ADDEDIT = 1;
 
-    final static int TEXTVIEW_OFFSET = 2;
-    final static int INPUT_OFFSET = 4;
-    final static int SIDE_MARGINS = 20;
-    final static int LEFT_MARGIN = 10;
+    private final static int TEXTVIEW_OFFSET = 2;
+    private final static int INPUT_OFFSET = 4;
+    private final static int SIDE_MARGINS = 20;
+    private final static int LEFT_MARGIN = 10;
 
-    static int width;
-    static int height;
+    private static int width;
+    private static int height;
 
     public static void format(Activity activity, int activityId) {
         DisplayMetrics dm = new DisplayMetrics();
@@ -75,7 +77,9 @@ public class UIFormatter {
         cl.width = width - (width / LEFT_MARGIN);
     }
 
-    public static void formatHome(Activity activity) {
-
+    private static void formatHome(Activity activity) {
+        HomeActivity homeActivity = (HomeActivity) activity;
+        TextView tvHomeYear = homeActivity.findViewById(R.id.tv_home_year);
+        tvHomeYear.setTextSize(Preferences.fontSize - 4);
     }
 }

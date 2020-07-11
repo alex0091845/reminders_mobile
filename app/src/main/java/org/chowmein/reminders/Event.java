@@ -1,11 +1,16 @@
 package org.chowmein.reminders;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static com.google.gson.internal.bind.util.ISO8601Utils.format;
 
 public class Event {
     private Date date;
     private String desc;
     private int dbr;
+    private String year;
     private boolean isSelected;
     private boolean yearTop;     /* indicates whether it's the first event of the year or not */
 
@@ -13,6 +18,9 @@ public class Event {
         this.date = date;
         this.desc = desc;
         this.dbr = dbr;
+
+        DateFormat yearFormat = new SimpleDateFormat("yyyy");
+        this.year = yearFormat.format(date);
     }
 
     public Date getDate() {
@@ -37,6 +45,14 @@ public class Event {
 
     public void setDesc(String desc) {
       this.desc = desc;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public boolean isSelected() { return this.isSelected; }

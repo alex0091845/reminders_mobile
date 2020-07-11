@@ -59,7 +59,7 @@ class EventManager {
             Notification reminder = new NotificationCompat.Builder(context, cId)
                     .setSmallIcon(R.drawable.button)
                     .setContentTitle(e.getDesc())
-                    .setContentText("In " + e.getDbr() + " days")
+                    .setContentText("In " + diffDays(e) + " days")
                     .build();
             notifMngr.notify(id, reminder);
             id++;
@@ -67,7 +67,7 @@ class EventManager {
     }
 
     private static void filterReminders(Context context) {
-        Date today = new Date();
+
         File saveFile = new File(context.getFilesDir().getPath(), "saveFile.json");
         ArrayList<Event> list = JsonHelper.deserialize(saveFile);
 
@@ -76,18 +76,25 @@ class EventManager {
         if(reminders == null) reminders = new ArrayList<>();
 
         for(Event e : list) {
-            Date eventDate = e.getDate();
+            long diffDays = diffDays(e);
             int dbr = e.getDbr();
-
-            // calculate difference b/t days
-            long diff = eventDate.getTime() - today.getTime();
-
-            // add to list of reminders if the user should be reminded of the event
-            long diffDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
             if(diffDays <= dbr) {
                 reminders.add(e);
             }
         }
+    }
+
+    private static long diffDays(Event e) {
+        // get today's date
+        Date today = new Date();
+
+        // calculate difference b/t days
+        long diff = e.getDate().getTime() - today.getTime();
+
+        // add to list of reminders if the user should be reminded of the event
+        long diffDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+
+        return diffDays;
     }
 }

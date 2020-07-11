@@ -2,6 +2,9 @@ package org.chowmein.reminders;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 
 import androidx.preference.PreferenceManager;
 
@@ -36,6 +39,12 @@ public class Preferences {
         Preferences.context = context;
         SharedPreferences shrdprefs = PreferenceManager.getDefaultSharedPreferences(context);
         Preferences.fontSize = shrdprefs.getInt("fontSize", 22);
+        // Preferences.ringtone = shrdprefs.getString();
+    }
+
+    public static String getRingtoneName(Context context, Uri ringtoneUri) {
+        Ringtone ringtone = RingtoneManager.getRingtone(context, ringtoneUri);
+        return ringtone.getTitle(context);
     }
 
 

@@ -154,8 +154,7 @@ public class EventFormActivity extends AppCompatActivity {
 
         // in edit, maybe remove the event first and then add it?
         Event event = new Event(date, desc, dbr);
-        int eventIndex = ((HomeActivity)HomeActivity.getContext()).getAdapter().getEventList()
-                .indexOf(event);
+        int eventIndex = HomeActivity.getAdapter().getEventList().indexOf(event);
         if(eventIndex > -1) {
             alertDuplicateEvent();
             return true;

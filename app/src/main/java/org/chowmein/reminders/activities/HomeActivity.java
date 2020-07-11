@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,8 +34,11 @@ import org.chowmein.reminders.EventItemDecoration;
 import org.chowmein.reminders.JsonHelper;
 import org.chowmein.reminders.Preferences;
 import org.chowmein.reminders.R;
+import org.chowmein.reminders.UIFormatter;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,21 +48,18 @@ public class HomeActivity extends AppCompatActivity {
     public final static int ADD_REQUEST_CODE = 0;
     public final static int EDIT_REQUEST_CODE = 1;
 
-    public EventAdapter getAdapter() {
+    public static EventAdapter getAdapter() {
         return adapter;
     }
 
-    EventAdapter adapter;
+    static EventAdapter adapter;
     File saveFile;
     public boolean selectMode;
-    private static Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        HomeActivity.ctx = this;
 
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.tb_title);
         setSupportActionBar(toolbar);
@@ -67,8 +68,8 @@ public class HomeActivity extends AppCompatActivity {
 
         saveFile = new File(this.getFilesDir().getPath(), "saveFile.json");
 
-        this.adapter = new EventAdapter(this);
-        this.adapter.addAll(JsonHelper.deserialize(saveFile));
+        adapter = new EventAdapter(this);
+        adapter.addAll(JsonHelper.deserialize(saveFile));
 
         Preferences.loadPreferences(this);
 
@@ -76,17 +77,82 @@ public class HomeActivity extends AppCompatActivity {
         RecyclerView rv_reminders = findViewById(R.id.rv_reminders);
         rv_reminders.setHasFixedSize(true);
         rv_reminders.setLayoutManager(new LinearLayoutManager(this));
-        rv_reminders.setAdapter(this.adapter);
+        rv_reminders.setAdapter(adapter);
 
         EventItemDecoration itemDeco = new EventItemDecoration(10);
         rv_reminders.addItemDecoration(itemDeco);
+
+        rv_reminders.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(@NonNull View view) {
+                LinearLayoutManager llManager = (LinearLayoutManager) rv_reminders.getLayoutManager();
+                int index = llManager.findFirstVisibleItemPosition();
+                if(rv_reminders.getChildAdapterPosition(view) == index) {
+                    setTvHomeYear(false);
+                }
+            }
+
+            /* this method takes care of whenever a view becomes invisible (outside of the
+            * RecyclerView)
+             */
+            @Override
+            public void onChildViewDetachedFromWindow(@NonNull View view) {
+                LinearLayoutManager llManager = (LinearLayoutManager) rv_reminders.getLayoutManager();
+                int index = llManager.findFirstCompletelyVisibleItemPosition() - 1;
+                View firstView = rv_reminders.getChildAt(index);
+
+                if(rv_reminders.getChildAdapterPosition(view) == index) {
+                    setTvHomeYear(true);
+                }
+            }
+        });
+
+        if(adapter.getEventList().size() == 0) {
+            findViewById(R.id.tv_home_year).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.tv_home_year).setVisibility(View.VISIBLE);
+            setTvHomeYear(true);
+        }
     }
 
     private void initViews() {
         FloatingActionButton btn_add = findViewById(R.id.btn_add);
         btn_add.setOnClickListener(e -> onBtnAddClicked());
+
         FloatingActionButton btn_del = findViewById(R.id.btn_delete);
         btn_del.setOnClickListener(e -> onBtnDelClicked());
+
+        UIFormatter.format(this, UIFormatter.HOME);
+    }
+
+    private void setTvHomeYear(boolean detach) {
+        // get a reference to the year textview
+        TextView tvHomeYear = (TextView) findViewById(R.id.tv_home_year);
+        if(tvHomeYear.getVisibility() == View.GONE) {
+            tvHomeYear.setVisibility(View.VISIBLE);
+        }
+
+        // get a reference to the RecyclerView's LinearLayoutManager
+        RecyclerView rv = findViewById(R.id.rv_reminders);
+        LinearLayoutManager llManager = (LinearLayoutManager) rv.getLayoutManager();
+
+        // get year of the now new first visible item
+        int firstPos;
+        String year;
+
+        // if the view is detaching, then it disappears out of sight, so just get the first
+        // completely visible item's position
+        if(detach) firstPos = llManager.findFirstCompletelyVisibleItemPosition();
+        // else if the view is attaching, we find the first visible (not completely visible) view's
+        // position
+        else firstPos = llManager.findFirstVisibleItemPosition();
+
+        // if can't find first item, the first must be visible
+        if(firstPos < 0) firstPos = 0;
+        year = adapter.get(firstPos).getYear();
+
+        // set the tv_home_year's year
+        tvHomeYear.setText(year);
     }
 
     @Override
@@ -115,11 +181,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void onBtnDelClicked() {
-        SortedList<Event> list = this.adapter.getEventList();
+        SortedList<Event> list = adapter.getEventList();
         int size = list.size();
         for(int i = 0; i < list.size(); i++) {
             if(list.get(i).isSelected()) {
-                this.adapter.removeAtIndex(i);
+                adapter.removeAtIndex(i);
                 i--;
             }
         }
@@ -129,13 +195,13 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        JsonHelper.serialize(this.adapter.getEventList(), this.saveFile);
+        JsonHelper.serialize(adapter.getEventList(), this.saveFile);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        JsonHelper.serialize(this.adapter.getEventList(), this.saveFile);
+        JsonHelper.serialize(adapter.getEventList(), this.saveFile);
     }
 
     @Override
@@ -173,10 +239,10 @@ public class HomeActivity extends AppCompatActivity {
 
             Event event = new Event(date, desc, dbr);
 
-            if(requestCode == ADD_REQUEST_CODE) this.adapter.add(event);
+            if(requestCode == ADD_REQUEST_CODE) adapter.add(event);
             else if(requestCode == EDIT_REQUEST_CODE) {
                 int eventPosition = bundle.getInt("eventPos");
-                this.adapter.update(eventPosition, event);
+                adapter.update(eventPosition, event);
             }
         }
     }
@@ -184,7 +250,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(selectMode) {
-            SortedList<Event> list = this.adapter.getEventList();
+            SortedList<Event> list = adapter.getEventList();
 
             // sets everything back to unselected when back pressed and was in select mode
             // and updates using the adapter so the screen will re-draw
@@ -213,9 +279,5 @@ public class HomeActivity extends AppCompatActivity {
             Toolbar title = this.findViewById(R.id.tb_title);
             title.setTitle("Reminders");
         }
-    }
-
-    public static Context getContext() {
-        return ctx;
     }
 }
