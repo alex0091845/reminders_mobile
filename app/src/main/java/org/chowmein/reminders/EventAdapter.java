@@ -185,8 +185,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         holder.tv_desc.setTextSize(Preferences.fontSize);
         holder.tv_date.setTextSize(Preferences.fontSize);
-        holder.tv_dbr.setTextSize(Preferences.fontSize - 8);
-        holder.tv_year.setTextSize(Preferences.fontSize - 4);
+        holder.tv_dbr.setTextSize(Preferences.fontSize - UIFormatter.SMALL_OFFSET);
+        holder.tv_year.setTextSize(Preferences.fontSize - UIFormatter.MEDIUM_OFFSET);
 
         // set style based on position
         if (event.isSelected()) {

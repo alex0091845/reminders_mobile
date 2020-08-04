@@ -23,6 +23,7 @@ public class Preferences {
     public static boolean prefsChanged;
 
     public static int fontSize;
+    public static Uri ringtoneUri;
 
     /**
      * Hide the default constructor.
@@ -37,9 +38,11 @@ public class Preferences {
      */
     public static void loadPreferences(Context context) {
         Preferences.context = context;
+
         SharedPreferences shrdprefs = PreferenceManager.getDefaultSharedPreferences(context);
+
         Preferences.fontSize = shrdprefs.getInt("fontSize", 22);
-        // Preferences.ringtone = shrdprefs.getString();
+        Preferences.ringtoneUri = Uri.parse(shrdprefs.getString("ringtone", "Silent"));
     }
 
     public static String getRingtoneName(Context context, Uri ringtoneUri) {

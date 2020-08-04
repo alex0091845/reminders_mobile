@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -75,6 +77,12 @@ public class SettingsActivity extends AppCompatActivity {
             ringtonePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        Intent notificationSettings = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                        startActivity(notificationSettings);
+                        return true;
+                    }
+
                     // go through all this just to get the name of the ringtone
                     SharedPreferences sharedPrefs = PreferenceManager
                             .getDefaultSharedPreferences(SettingsFragment.this.getContext());
@@ -101,6 +109,8 @@ public class SettingsActivity extends AppCompatActivity {
         public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
 
+            if(data == null) return;
+
             Uri ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             SharedPreferences sharedPrefs = PreferenceManager.
                     getDefaultSharedPreferences(this.getContext());
@@ -120,14 +130,5 @@ public class SettingsActivity extends AppCompatActivity {
             // set the summary of the pref to the ringtone name
             findPreference("ringtone").setSummary(ringtoneName);
         }
-
-
-//        @Override
-//        public void onDestroyView() {
-//            SharedPreferences sharedPrefs = PreferenceManager
-//                    .getDefaultSharedPreferences(this.getContext());
-//            sharedPrefs.edit().putString("ringtone", );
-//            super.onDestroyView();
-//        }
     }
 }

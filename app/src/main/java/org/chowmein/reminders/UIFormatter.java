@@ -24,10 +24,11 @@ public class UIFormatter {
     public final static int HOME = 0;
     public final static int ADDEDIT = 1;
 
-    private final static int TEXTVIEW_OFFSET = 2;
-    private final static int INPUT_OFFSET = 4;
-    private final static int SIDE_MARGINS = 20;
-    private final static int LEFT_MARGIN = 10;
+    public final static int LARGE_OFFSET = 2;
+    public final static int MEDIUM_OFFSET = 4;
+    public final static int SMALL_OFFSET = 8;
+    public final static int SIDE_MARGINS = 20;
+    public final static int LEFT_MARGIN = 10;
 
     private static int width;
     private static int height;
@@ -45,30 +46,30 @@ public class UIFormatter {
     private static void formatAddEdit(Activity activity) {
         TextView tvDate = activity.findViewById(R.id.tv_date);
         setMarginAndWidthAddEdit(tvDate);
-        tvDate.setTextSize(Preferences.fontSize - TEXTVIEW_OFFSET);
+        tvDate.setTextSize(Preferences.fontSize - LARGE_OFFSET);
 
         Button btnDate = activity.findViewById(R.id.btn_date);
         setMarginAndWidthAddEdit(btnDate);
-        btnDate.setTextSize(Preferences.fontSize - INPUT_OFFSET);
+        btnDate.setTextSize(Preferences.fontSize - MEDIUM_OFFSET);
 
         TextView tvDesc = activity.findViewById(R.id.tv_desc);
         setMarginAndWidthAddEdit(tvDesc);
-        tvDesc.setTextSize(Preferences.fontSize - TEXTVIEW_OFFSET);
+        tvDesc.setTextSize(Preferences.fontSize - LARGE_OFFSET);
 
         EditText edtDesc = activity.findViewById(R.id.edt_desc);
         setMarginAndWidthAddEdit(edtDesc);
-        edtDesc.setTextSize(Preferences.fontSize - INPUT_OFFSET);
+        edtDesc.setTextSize(Preferences.fontSize - MEDIUM_OFFSET);
 
         TextView tvDbr = activity.findViewById(R.id.tv_dbr);
         setMarginAndWidthAddEdit(tvDbr);
-        tvDbr.setTextSize(Preferences.fontSize - TEXTVIEW_OFFSET);
+        tvDbr.setTextSize(Preferences.fontSize - LARGE_OFFSET);
 
         EditText edtDbr = activity.findViewById(R.id.edt_dbr);
         setMarginAndWidthAddEdit(edtDbr);
-        edtDbr.setTextSize(Preferences.fontSize - INPUT_OFFSET);
+        edtDbr.setTextSize(Preferences.fontSize - MEDIUM_OFFSET);
 
         Button btnSubmit = activity.findViewById(R.id.btn_submit);
-        btnSubmit.setTextSize(Preferences.fontSize - INPUT_OFFSET);
+        btnSubmit.setTextSize(Preferences.fontSize - MEDIUM_OFFSET);
     }
 
     private static void setMarginAndWidthAddEdit(View v) {
@@ -80,6 +81,6 @@ public class UIFormatter {
     private static void formatHome(Activity activity) {
         HomeActivity homeActivity = (HomeActivity) activity;
         TextView tvHomeYear = homeActivity.findViewById(R.id.tv_home_year);
-        tvHomeYear.setTextSize(Preferences.fontSize - 4);
+        tvHomeYear.setTextSize(Preferences.fontSize - UIFormatter.MEDIUM_OFFSET);
     }
 }

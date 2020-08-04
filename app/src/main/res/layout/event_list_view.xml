@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:clickable="false"
+        android:clickable="true"
         android:longClickable="false"
         android:paddingTop="3dp"
         android:paddingBottom="7dp"
