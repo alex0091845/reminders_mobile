@@ -38,11 +38,9 @@ import java.util.ArrayList;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private SortedList<Event> eventList;
-    private Context context;
     private RecyclerView view;
 
     public EventAdapter(Context context) {
-        this.context = context;
         this.view = ((Activity)context).findViewById(R.id.rv_reminders);
         this.eventList = new SortedList<>(Event.class, new SortedList.Callback<Event>() {
             @Override
@@ -114,9 +112,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         @Override
         public void onClick(View view) {
             // initialize the necessary views and activities
-            HomeActivity home = (HomeActivity) view.getContext();
+            Context context = view.getContext();
+            HomeActivity home = (HomeActivity) context;
 
-            if(home.selectMode) selectEvent(view);
+            if(home.selectMode) selectEvent(view, context);
             else editEvent(home);
         }
 
@@ -144,21 +143,22 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             home.startActivityForResult(editActivity, HomeActivity.EDIT_REQUEST_CODE);
         }
 
-        private void selectEvent(View view) {
+        private void selectEvent(View view, Context context) {
             int adptrPos = this.getAdapterPosition();
             Event event = EventAdapter.this.get(adptrPos);
             event.setSelected(!event.isSelected());
-            setStyle(this, event);
+            setStyle(this, event, context);
         }
 
         @Override
         public boolean onLongClick(View view) {
 
-            HomeActivity home = (HomeActivity) view.getContext();
+            Context context = view.getContext();
+            HomeActivity home = (HomeActivity) context;
 
             // enter select mode, if not already
             if(!home.selectMode) {
-                selectEvent(view);
+                selectEvent(view, context);
                 home.toggleSelectMode();
             }
             return true;
@@ -173,7 +173,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return new EventViewHolder(view);
     }
 
-    public void setStyle(EventViewHolder holder, Event event) {
+    public void setStyle(EventViewHolder holder, Event event, Context context) {
         if(event.isYearTop()) {
             holder.tv_year.setVisibility(View.VISIBLE);
             DateFormat yearFormat = new SimpleDateFormat("yyyy");
@@ -244,8 +244,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             }
         }
 
+        // cheating here, since we can't make a context static
+        Context context = HomeActivity.getAdapter().view.getContext();
+
         // sets the style of the viewHolder
-        setStyle(holder, event);
+        setStyle(holder, event, context);
     }
 
     @Override
@@ -253,7 +256,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return eventList.size();
     }
 
-    public SortedList getEventList() {
+    public SortedList<Event> getEventList() {
         return eventList;
     }
 
