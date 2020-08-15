@@ -26,7 +26,7 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-import org.chowmein.reminders.BootDeviceReceiver;
+import org.chowmein.reminders.receivers.BootDeviceReceiver;
 import org.chowmein.reminders.model.Event;
 import org.chowmein.reminders.R;
 

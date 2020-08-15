@@ -19,8 +19,8 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.chowmein.reminders.model.Event;
-import org.chowmein.reminders.EventAdapter;
-import org.chowmein.reminders.EventItemDecoration;
+import org.chowmein.reminders.viewmodel.EventAdapter;
+import org.chowmein.reminders.viewmodel.EventItemDecoration;
 import org.chowmein.reminders.helpers.JsonHelper;
 import org.chowmein.reminders.helpers.Preferences;
 import org.chowmein.reminders.R;

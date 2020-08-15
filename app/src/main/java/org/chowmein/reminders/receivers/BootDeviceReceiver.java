@@ -1,4 +1,4 @@
-package org.chowmein.reminders;
+package org.chowmein.reminders.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

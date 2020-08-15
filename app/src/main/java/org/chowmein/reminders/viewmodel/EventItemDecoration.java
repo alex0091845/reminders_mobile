@@ -1,4 +1,4 @@
-package org.chowmein.reminders;
+package org.chowmein.reminders.viewmodel;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;

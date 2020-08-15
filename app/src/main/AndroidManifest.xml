@@ -22,7 +22,7 @@
         </activity>
 
         <receiver
-            android:name=".BootDeviceReceiver"
+            android:name=".receivers.BootDeviceReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

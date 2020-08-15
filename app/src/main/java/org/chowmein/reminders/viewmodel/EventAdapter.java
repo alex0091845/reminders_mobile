@@ -1,4 +1,4 @@
-package org.chowmein.reminders;
+package org.chowmein.reminders.viewmodel;
 
 /**
  * The essential class for transforming a collection of data into
@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
+import org.chowmein.reminders.R;
 import org.chowmein.reminders.activities.EventFormActivity;
 import org.chowmein.reminders.activities.HomeActivity;
 import org.chowmein.reminders.helpers.Preferences;
