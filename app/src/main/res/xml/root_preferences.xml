@@ -1,0 +1,49 @@
+<!--References-->
+<!--Setting min/max value and step size of seekbar-->
+<!--https://github.com/consp1racy/android-support-preference/issues/72-->
+
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/messages_header" app:iconSpaceReserved="false">
+
+        <SeekBarPreference
+            app:key="fontSize"
+            app:title="Font size"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="70"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="14"
+            android:max="25"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:title="Remind ringtone"
+            app:key="ringtone"
+            app:summary="@string/ringtone_name"
+            app:persistent="true"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+<!--    <PreferenceCategory app:title="@string/sync_header" app:iconSpaceReserved="false">-->
+
+<!--        <SwitchPreferenceCompat-->
+<!--            app:key="sync"-->
+<!--            app:title="@string/sync_title"-->
+<!--            app:iconSpaceReserved="false" />-->
+
+<!--        <SwitchPreferenceCompat-->
+<!--            app:dependency="sync"-->
+<!--            app:key="attachment"-->
+<!--            app:summaryOff="@string/attachment_summary_off"-->
+<!--            app:summaryOn="@string/attachment_summary_on"-->
+<!--            app:title="@string/attachment_title"-->
+<!--            app:iconSpaceReserved="false" />-->
+
+<!--    </PreferenceCategory>-->
+
+</PreferenceScreen>

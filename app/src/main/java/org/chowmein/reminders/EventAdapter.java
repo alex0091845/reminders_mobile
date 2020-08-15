@@ -13,7 +13,6 @@ package org.chowmein.reminders;
  * https://medium.com/@droidbyme/android-recyclerview-with-single-and-multiple-selection-5d50c0c4c739
  */
 
-// import android.content.Context;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +20,6 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-// import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,22 +28,24 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
+import org.chowmein.reminders.activities.EventFormActivity;
+import org.chowmein.reminders.activities.HomeActivity;
+import org.chowmein.reminders.helpers.Preferences;
+import org.chowmein.reminders.helpers.UIFormatter;
+import org.chowmein.reminders.model.Event;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import static androidx.core.app.ActivityCompat.startActivityForResult;
-
-class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private SortedList<Event> eventList;
-    private Context context;
     private RecyclerView view;
 
     public EventAdapter(Context context) {
-        this.context = context;
         this.view = ((Activity)context).findViewById(R.id.rv_reminders);
-        this.eventList = new SortedList<Event>(Event.class, new SortedList.Callback<Event>() {
+        this.eventList = new SortedList<>(Event.class, new SortedList.Callback<Event>() {
             @Override
             public int compare(Event o1, Event o2) {
                 int dateComp = o1.getDate().compareTo(o2.getDate());
@@ -95,18 +95,18 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener{
         Event event;
-        // public CheckBox cb_select;
         TextView tv_desc;
         TextView tv_date;
         TextView tv_dbr;
+        TextView tv_year;
         ConstraintLayout cl_list_item;
 
         EventViewHolder(View eventView) {
             super(eventView);
-            // cb_select = eventView.findViewById(R.id.cb_select);
             tv_desc = eventView.findViewById(R.id.tv_event_desc);
             tv_date = eventView.findViewById(R.id.tv_event_date);
             tv_dbr = eventView.findViewById(R.id.tv_event_dbr);
+            tv_year = eventView.findViewById(R.id.tv_event_year);
             cl_list_item = eventView.findViewById(R.id.cl_list_item);
             eventView.setOnClickListener(this);
             eventView.setOnLongClickListener(this);
@@ -115,14 +115,15 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
         @Override
         public void onClick(View view) {
             // initialize the necessary views and activities
-            HomeActivity home = (HomeActivity) view.getContext();
+            Context context = view.getContext();
+            HomeActivity home = (HomeActivity) context;
 
-            if(home.selectMode) selectEvent(view);
+            if(home.selectMode) selectEvent(view, context);
             else editEvent(home);
         }
 
         private void editEvent(HomeActivity home) {
-            Intent editActivity = new Intent(home, EditActivity.class);
+            Intent editActivity = new Intent(home, EventFormActivity.class);
             editActivity.putExtra("requestCode", HomeActivity.EDIT_REQUEST_CODE);
 
             // gets the event corresponding to the clicked view
@@ -145,21 +146,22 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
             home.startActivityForResult(editActivity, HomeActivity.EDIT_REQUEST_CODE);
         }
 
-        private void selectEvent(View view) {
-            Event event = EventAdapter.this.get(this.getAdapterPosition());
+        private void selectEvent(View view, Context context) {
+            int adptrPos = this.getAdapterPosition();
+            Event event = EventAdapter.this.get(adptrPos);
             event.setSelected(!event.isSelected());
-            System.out.println(event.isSelected());
-            setStyle(this, event);
+            setStyle(this, event, context);
         }
 
         @Override
         public boolean onLongClick(View view) {
 
-            HomeActivity home = (HomeActivity) view.getContext();
+            Context context = view.getContext();
+            HomeActivity home = (HomeActivity) context;
 
             // enter select mode, if not already
             if(!home.selectMode) {
-                selectEvent(view);
+                selectEvent(view, context);
                 home.toggleSelectMode();
             }
             return true;
@@ -174,7 +176,21 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
         return new EventViewHolder(view);
     }
 
-    private void setStyle(EventViewHolder holder, Event event) {
+    public void setStyle(EventViewHolder holder, Event event, Context context) {
+        if(event.isYearTop()) {
+            holder.tv_year.setVisibility(View.VISIBLE);
+            DateFormat yearFormat = new SimpleDateFormat("yyyy");
+            String yearStr = yearFormat.format(event.getDate());
+            holder.tv_year.setText(yearStr);
+        } else {
+            holder.tv_year.setVisibility(View.GONE);
+        }
+
+        holder.tv_desc.setTextSize(Preferences.fontSize);
+        holder.tv_date.setTextSize(Preferences.fontSize);
+        holder.tv_dbr.setTextSize(Preferences.fontSize - UIFormatter.SMALL_OFFSET);
+        holder.tv_year.setTextSize(Preferences.fontSize - UIFormatter.MEDIUM_OFFSET);
+
         // set style based on position
         if (event.isSelected()) {
             holder.cl_list_item.setBackground(ContextCompat.getDrawable(context, R.drawable.item_bg_blue));
@@ -202,12 +218,40 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
         holder.event = event;
+
+        // sets the easy data textviews
         holder.tv_desc.setText(event.getDesc());
-        DateFormat format = new SimpleDateFormat("M/d"); // format to only month and day
-        String dateStr = format.format(event.getDate());
-        holder.tv_date.setText(dateStr);
         holder.tv_dbr.setText(event.getDbr() + " days before");
-        setStyle(holder, event);
+
+        // sets the date textview
+        DateFormat dateFormat = new SimpleDateFormat("M/d"); // format to only month and day
+        String dateStr = dateFormat.format(event.getDate());
+        holder.tv_date.setText(dateStr);
+
+        // sets the year textview
+        DateFormat yearFormat = new SimpleDateFormat("yyyy");
+        String yearStr = yearFormat.format(event.getDate());
+        holder.tv_year.setText(yearStr);
+
+        // if the event before this is of a different year, set its yearTop to true
+        // or if the event is the first
+        if (position != 0) {
+            Event previousEvent = eventList.get(position - 1);
+            String prevYearStr = yearFormat.format(previousEvent.getDate());
+            int prevYear = Integer.parseInt(prevYearStr);
+            int currYear = Integer.parseInt(yearStr);
+            if(prevYear < currYear) {
+                event.setYearTop(true);
+            } else {
+                event.setYearTop(false);
+            }
+        }
+
+        // cheating here, since we can't make a context static
+        Context context = HomeActivity.getAdapter().view.getContext();
+
+        // sets the style of the viewHolder
+        setStyle(holder, event, context);
     }
 
     @Override
@@ -215,7 +259,7 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
         return eventList.size();
     }
 
-    public SortedList getEventList() {
+    public SortedList<Event> getEventList() {
         return eventList;
     }
 
