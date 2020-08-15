@@ -25,7 +25,8 @@
         app:layout_constraintTop_toBottomOf="@+id/tb_title"
         app:layout_constraintVertical_bias="1.0"
         app:maxImageSize="18dp"
-        app:useCompatPadding="false" />
+        app:useCompatPadding="false"
+        android:focusable="true" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"
@@ -44,7 +45,8 @@
         app:layout_constraintTop_toBottomOf="@+id/tb_title"
         app:layout_constraintVertical_bias="1.0"
         app:maxImageSize="18dp"
-        app:useCompatPadding="false" />
+        app:useCompatPadding="false"
+        android:focusable="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_reminders"
@@ -73,7 +75,6 @@
         android:id="@+id/tv_home_year"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="2020"
         android:textColor="#393939"
         android:textAlignment="center"
         android:paddingTop="7dp"
