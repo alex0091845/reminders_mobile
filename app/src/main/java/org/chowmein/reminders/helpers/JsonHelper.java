@@ -1,4 +1,4 @@
-package org.chowmein.reminders;
+package org.chowmein.reminders.helpers;
 
 /**
  * The file for a helper class to serialize and deserialize custom json
@@ -20,6 +20,8 @@ import java.util.Date;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+
+import org.chowmein.reminders.model.Event;
 
 public class JsonHelper {
     public static ArrayList<Event> deserialize(File file) {

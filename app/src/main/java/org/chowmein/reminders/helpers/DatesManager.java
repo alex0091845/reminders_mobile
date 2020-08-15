@@ -1,4 +1,4 @@
-package org.chowmein.reminders;
+package org.chowmein.reminders.helpers;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -84,14 +84,4 @@ public class DatesManager {
         }
         return -1;
     }
-
-//    /**
-//     * Calculates the difference between two times in milliseconds, namely a - b.
-//     * @param a first time in milliseconds
-//     * @param b second time in milliseconds
-//     * @return the difference between a and b
-//     */
-//    public static long diffTime(long a, long b) {
-//
-//    }
 }

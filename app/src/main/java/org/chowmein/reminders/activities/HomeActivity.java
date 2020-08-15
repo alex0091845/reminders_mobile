@@ -18,13 +18,13 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.chowmein.reminders.Event;
+import org.chowmein.reminders.model.Event;
 import org.chowmein.reminders.EventAdapter;
 import org.chowmein.reminders.EventItemDecoration;
-import org.chowmein.reminders.JsonHelper;
-import org.chowmein.reminders.Preferences;
+import org.chowmein.reminders.helpers.JsonHelper;
+import org.chowmein.reminders.helpers.Preferences;
 import org.chowmein.reminders.R;
-import org.chowmein.reminders.UIFormatter;
+import org.chowmein.reminders.helpers.UIFormatter;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -371,7 +371,7 @@ public class HomeActivity extends AppCompatActivity {
 
     /**
      * Getter for the RecyclerView adapter
-     * @return adapter
+     * Returns the adapter
      */
     public static EventAdapter getAdapter() {
         return adapter;

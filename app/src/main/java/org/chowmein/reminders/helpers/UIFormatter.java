@@ -1,6 +1,6 @@
-package org.chowmein.reminders;
+package org.chowmein.reminders.helpers;
 
-/**
+/*
  * ----------------------------------------References-----------------------------------------------
  * Get screen width and height pixels:
  * https://stackoverflow.com/questions/4743116/get-screen-width-and-height-in-android
@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import org.chowmein.reminders.R;
 import org.chowmein.reminders.activities.HomeActivity;
 
 public class UIFormatter {
@@ -31,13 +32,11 @@ public class UIFormatter {
     public final static int LEFT_MARGIN = 10;
 
     private static int width;
-    private static int height;
 
     public static void format(Activity activity, int activityId) {
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         width = dm.widthPixels;
-        height = dm.heightPixels;
 
         if(activityId == HOME) formatHome(activity);
         else if(activityId == ADDEDIT) formatAddEdit(activity);

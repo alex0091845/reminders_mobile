@@ -20,9 +20,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.chowmein.reminders.Event;
+import org.chowmein.reminders.model.Event;
 import org.chowmein.reminders.R;
-import org.chowmein.reminders.UIFormatter;
+import org.chowmein.reminders.helpers.UIFormatter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -3,13 +3,8 @@ package org.chowmein.reminders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.OutputStreamWriter;
+import org.chowmein.reminders.helpers.EventManager;
 
 public class BootDeviceReceiver extends BroadcastReceiver {
 
