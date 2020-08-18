@@ -22,7 +22,7 @@
         </activity>
 
         <receiver
-            android:name=".receivers.BootDeviceReceiver"
+            android:name=".receivers.AlertReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

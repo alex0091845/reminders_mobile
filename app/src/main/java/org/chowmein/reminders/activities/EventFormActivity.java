@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import org.chowmein.reminders.model.Event;
 import org.chowmein.reminders.R;
-import org.chowmein.reminders.helpers.UIFormatter;
+import org.chowmein.reminders.managers.UIFormatter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

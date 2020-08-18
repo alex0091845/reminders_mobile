@@ -1,4 +1,4 @@
-package org.chowmein.reminders.helpers;
+package org.chowmein.reminders.managers;
 
 /*
  * ------------------------------------------References---------------------------------------------
@@ -26,7 +26,7 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-import org.chowmein.reminders.receivers.BootDeviceReceiver;
+import org.chowmein.reminders.receivers.AlertReceiver;
 import org.chowmein.reminders.model.Event;
 import org.chowmein.reminders.R;
 
@@ -42,6 +42,10 @@ import java.util.Date;
  */
 public class EventManager {
     private final static int REGISTER_ALARM = 1;
+    private final static double DAY_IN_MS = 86400000.0;
+    private final static String CID = "remind";  // channel id
+
+    public final static String REGISTER_ALARM_ACTION = "REGISTER_ALARM";
 
     private static ArrayList<Event> reminders;
 
@@ -61,14 +65,11 @@ public class EventManager {
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // channel ID
-        String cId = "remind";
-
         // sets up notification channel
-        initNotificationChannel(notificationManager, cId);
+        initNotificationChannel(notificationManager);
 
         // remind user of each event within the dbr of the current date
-        notifyAll(context, notificationManager, cId);
+        notifyAll(context, notificationManager);
 
         registerAlarmTomorrow(context);
     }
@@ -77,13 +78,12 @@ public class EventManager {
      * Sets up notification channel (for supporting API > 26).
      * @param notificationManager the notification manager
      */
-    private static void initNotificationChannel(NotificationManager notificationManager,
-                                                String cId) {
+    private static void initNotificationChannel(NotificationManager notificationManager) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "On boot";
             String description = "Remind events";
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(cId, name, importance);
+            NotificationChannel channel = new NotificationChannel(CID, name, importance);
             channel.setDescription(description);
 
             // set notification sound
@@ -101,16 +101,14 @@ public class EventManager {
      * Remind user of each event within the dbr of the current date
      * @param context the context
      * @param notificationManager the notification manager
-     * @param cId the channel id
      */
-    private static void notifyAll(Context context, NotificationManager notificationManager,
-                                  String cId) {
+    private static void notifyAll(Context context, NotificationManager notificationManager) {
         // keep track of the ids for each of the notifications
         int id = 0;
 
         for(Event e : reminders) {
             NotificationCompat.Builder reminderBuilder = new NotificationCompat.Builder(context,
-                    cId);
+                    CID);
 
             // only sound the first notification
             if(id == 0) {
@@ -132,7 +130,7 @@ public class EventManager {
      */
     private static void filterReminders(Context context) {
 
-        File saveFile = new File(context.getFilesDir().getPath(), "saveFile.json");
+        File saveFile = new File(context.getFilesDir().getPath(), "saveFile.json"); //TODO
         ArrayList<Event> list = JsonHelper.deserialize(saveFile);
 
         if(list == null) return;
@@ -160,8 +158,8 @@ public class EventManager {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         // create PendingIntent for the alarm to use
-        Intent intent = new Intent(context, BootDeviceReceiver.class);
-        intent.setAction("REGISTER_ALARM");
+        Intent intent = new Intent(context, AlertReceiver.class);
+        intent.setAction(REGISTER_ALARM_ACTION);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REGISTER_ALARM,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -198,7 +196,7 @@ public class EventManager {
 
         // round down the difference when dividing to see how many days in difference
         // so that it will accurately reflect the strict difference in days
-        long diffDays = (long) Math.floor(diff / 86400000.0);
+        long diffDays = (long) Math.floor(diff / DAY_IN_MS);
 
         return diffDays;
     }

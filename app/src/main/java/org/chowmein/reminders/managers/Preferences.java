@@ -1,4 +1,4 @@
-package org.chowmein.reminders.helpers;
+package org.chowmein.reminders.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -22,7 +22,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import org.chowmein.reminders.helpers.Preferences;
+import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.R;
 
 public class SettingsActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package org.chowmein.reminders.helpers;
+package org.chowmein.reminders.managers;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

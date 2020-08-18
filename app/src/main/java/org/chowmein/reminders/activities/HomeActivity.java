@@ -21,10 +21,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.chowmein.reminders.model.Event;
 import org.chowmein.reminders.viewmodel.EventAdapter;
 import org.chowmein.reminders.viewmodel.EventItemDecoration;
-import org.chowmein.reminders.helpers.JsonHelper;
-import org.chowmein.reminders.helpers.Preferences;
+import org.chowmein.reminders.managers.JsonHelper;
+import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.R;
-import org.chowmein.reminders.helpers.UIFormatter;
+import org.chowmein.reminders.managers.UIFormatter;
 
 import java.io.File;
 import java.text.DateFormat;

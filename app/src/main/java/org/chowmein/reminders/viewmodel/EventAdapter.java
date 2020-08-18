@@ -31,8 +31,8 @@ import androidx.recyclerview.widget.SortedList;
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.activities.EventFormActivity;
 import org.chowmein.reminders.activities.HomeActivity;
-import org.chowmein.reminders.helpers.Preferences;
-import org.chowmein.reminders.helpers.UIFormatter;
+import org.chowmein.reminders.managers.Preferences;
+import org.chowmein.reminders.managers.UIFormatter;
 import org.chowmein.reminders.model.Event;
 
 import java.text.DateFormat;
