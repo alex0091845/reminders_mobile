@@ -1,47 +1,33 @@
 package org.chowmein.reminders.managers;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * A helper class to operate on dates.
+ */
 public class DatesManager {
-    public static final int MONTH = 0;
-    public static final int DAY_OF_MONTH = 1;
-    public static final int YEAR = 2;
+    public static final long TIME_IN_MS = 86400000L;
+    public static final String DATE_PATTERN = "M/d/yyyy";
+    public static final String MONTH_PATTERN = "M";
+    public static final String DAY_PATTERN = "d";
+    public static final String YEAR_PATTERN = "yyyy";
 
-    public static final int ROUND_UP = 0;
-    public static final int ROUND_DOWN = 1;
+    private static final int ROUND_UP = 0;
+    private static final int ROUND_DOWN = 1;
 
-    // encapsulate constructor
+    // encapsulate default constructor
     private DatesManager() {}
-
-    public static String fromDateToString(Date date, int mode) {
-        String result;
-
-        switch (mode) {
-            case MONTH:
-                DateFormat monthFormat = new SimpleDateFormat("M");
-                result = monthFormat.format(date);
-            case DAY_OF_MONTH:
-                DateFormat domFormat = new SimpleDateFormat("dd");
-                result = domFormat.format(date);
-            case YEAR:
-                DateFormat yearFormat = new SimpleDateFormat("yyyy");
-                result = yearFormat.format(date);
-            default:
-                result = date.toString();
-        }
-
-        return result;
-    }
 
     /**
      * Converts a UTC Calendar time to local time in milliseconds
-     * @param time
-     * @return
+     * @param time the time
+     * Returns the local time in milliseconds
      */
-    public static long utcToLocalTime(Calendar time) {
+    static long utcToLocalTime(Calendar time) {
         Date date = time.getTime();
 
         // gets the timezone offset
@@ -53,7 +39,12 @@ public class DatesManager {
         return localTime;
     }
 
-    public static long localToUTCTime(Calendar time) {
+    /**
+     * Converts a "local" Calendar time
+     * @param time the local Calendar time
+     * @return the UTC time
+     */
+    static long localToUTCTime(Calendar time) {
         Date date = time.getTime();
 
         // gets the timezone offset
@@ -70,18 +61,38 @@ public class DatesManager {
      * @param time the time to round down to
      * @return day rounded down in milliseconds
      */
-    public static long roundToDay(long time, int mode) {
+    static long roundToDay(long time, int mode) {
         Date today = new Date(time);
         System.out.println("input: " + today);
 
         if(mode == ROUND_DOWN) {
-            return time - (time % 86400000L);
+            return time - (time % TIME_IN_MS);
         } else if (mode == ROUND_UP) {
-            long result = time + (86400000L - (time % 86400000L));
-            Date date = new Date(result);
-            System.out.println("result: " + date);
+            long result = time + (TIME_IN_MS - (time % TIME_IN_MS));
             return result;
         }
         return -1;
+    }
+
+    /**
+     * Used to format a date into a certain pattern
+     * @param date the date to format
+     * @param pattern the format/pattern to format the date into
+     * @return the formatted date as a String
+     */
+    static String formatDate(Date date, String pattern) {
+        DateFormat format = new SimpleDateFormat(pattern);
+        return format.format(date);
+    }
+
+    /**
+     * Used to parse a date string into a Date
+     * @param date the date string
+     * @param pattern the pattern of the date
+     * @return a Date object
+     */
+    static Date parseDate(String date, String pattern) throws ParseException {
+        DateFormat format = new SimpleDateFormat(pattern);
+        return format.parse(date);
     }
 }

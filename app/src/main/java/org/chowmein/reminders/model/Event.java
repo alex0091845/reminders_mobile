@@ -8,6 +8,10 @@ import java.util.Date;
  * The Event model to store the data input from the user.
  */
 public class Event {
+    public static final String DESC_KEY = "desc";
+    public static final String DATE_KEY = "date";
+    public static final String DBR_KEY = "dbr";
+
     private Date date;
     private String desc;
     private int dbr;
