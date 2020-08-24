@@ -14,8 +14,10 @@ import androidx.preference.PreferenceManager;
  * classes to access globally. The method loadPreferences(Context) must be called first.
  */
 public class Preferences {
-
-    static Context context;
+    private static final String FONT_SIZE_KEY = "fontSize";
+    private static final String RINGTONE_KEY = "ringtone";
+    private static final String DEFAULT_RINGTONE_VALUE = "Silent";
+    private static final int DEFAULT_FONT_SIZE = 22;
 
     /* indicating whether any prefs have changed. This will be set in the onCreate() callback
     * of the SettingsActivity, and set again to true in the onPreferenceChanged() in its inner
@@ -23,7 +25,7 @@ public class Preferences {
     public static boolean prefsChanged;
 
     public static int fontSize;
-    public static Uri ringtoneUri;
+    static Uri ringtoneUri;
 
     /**
      * Hide the default constructor.
@@ -37,14 +39,19 @@ public class Preferences {
      * @param context main activity's context
      */
     public static void loadPreferences(Context context) {
-        Preferences.context = context;
-
         SharedPreferences shrdprefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        Preferences.fontSize = shrdprefs.getInt("fontSize", 22);
-        Preferences.ringtoneUri = Uri.parse(shrdprefs.getString("ringtone", "Silent"));
+        Preferences.fontSize = shrdprefs.getInt(FONT_SIZE_KEY, DEFAULT_FONT_SIZE);
+        Preferences.ringtoneUri = Uri.parse(shrdprefs.getString(RINGTONE_KEY,
+                DEFAULT_RINGTONE_VALUE));
     }
 
+    /**
+     * Gets the ringtone name from a Uri to display to the user.
+     * @param context the context
+     * @param ringtoneUri the ringtone uri
+     * @return title/name of the ringtone
+     */
     public static String getRingtoneName(Context context, Uri ringtoneUri) {
         Ringtone ringtone = RingtoneManager.getRingtone(context, ringtoneUri);
         return ringtone.getTitle(context);

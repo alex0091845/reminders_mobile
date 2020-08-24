@@ -46,6 +46,8 @@ public class EventManager {
     private final static String CID = "remind";  // channel id
 
     public final static String REGISTER_ALARM_ACTION = "REGISTER_ALARM";
+    private static final String NOTIFICATION_CHANNEL_NAME = "On boot";
+    private static final String NOTIFICATION_CHANNEL_DESC = "Remind events";
 
     private static ArrayList<Event> reminders;
 
@@ -80,11 +82,10 @@ public class EventManager {
      */
     private static void initNotificationChannel(NotificationManager notificationManager) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "On boot";
-            String description = "Remind events";
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CID, name, importance);
-            channel.setDescription(description);
+            NotificationChannel channel = new NotificationChannel(CID, NOTIFICATION_CHANNEL_NAME,
+                    importance);
+            channel.setDescription(NOTIFICATION_CHANNEL_DESC);
 
             // set notification sound
             AudioAttributes audAttr = new AudioAttributes.Builder()
@@ -130,7 +131,7 @@ public class EventManager {
      */
     private static void filterReminders(Context context) {
 
-        File saveFile = new File(context.getFilesDir().getPath(), "saveFile.json"); //TODO
+        File saveFile = new File(context.getFilesDir().getPath(), JsonHelper.SAVE_FILE_NAME);
         ArrayList<Event> list = JsonHelper.deserialize(saveFile);
 
         if(list == null) return;
@@ -183,7 +184,7 @@ public class EventManager {
      * @param e the event to calculate days until
      * @return the number of days until the event
      */
-    private static long daysUntilEvent(Event e) {
+    private static int daysUntilEvent(Event e) {
         // get the local time
         Calendar cal = Calendar.getInstance();
         long localTime = DatesManager.utcToLocalTime(cal);
@@ -196,17 +197,15 @@ public class EventManager {
 
         // round down the difference when dividing to see how many days in difference
         // so that it will accurately reflect the strict difference in days
-        long diffDays = (long) Math.floor(diff / DAY_IN_MS);
-
-        return diffDays;
+        return (int) Math.floor(diff / DAY_IN_MS);   // difference in days
     }
 
     /**
-     * A helper method to say how many days in prose: "In >1 days", "Tomorrow", or "Today."
+     * A method to say how many days in prose: "In >1 days", "Tomorrow", or "Today."
      * @param days number of days until the event
      * @return the String prose
      */
-    private static String getDaysAwayString(long days) {
+    public static String getDaysAwayString(int days) {
         String daysAway;
 
         if(days > 1)        daysAway = "In " + days + " days";

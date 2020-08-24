@@ -11,13 +11,14 @@ import java.util.Date;
  */
 public class DatesManager {
     public static final long TIME_IN_MS = 86400000L;
-    public static final String DATE_PATTERN = "M/d/yyyy";
-    public static final String MONTH_PATTERN = "M";
-    public static final String DAY_PATTERN = "d";
-    public static final String YEAR_PATTERN = "yyyy";
+    public static final String DATE_PTRN = "M/d/yyyy";
+    public static final String MONTH_DAY_PTRN = "M/d";
+    public static final String MONTH_PTRN = "M";
+    public static final String DAY_PTRN = "d";
+    public static final String YEAR_PTRN = "yyyy";
 
-    private static final int ROUND_UP = 0;
-    private static final int ROUND_DOWN = 1;
+    public static final int ROUND_UP = 0;
+    public static final int ROUND_DOWN = 1;
 
     // encapsulate default constructor
     private DatesManager() {}
@@ -62,9 +63,6 @@ public class DatesManager {
      * @return day rounded down in milliseconds
      */
     static long roundToDay(long time, int mode) {
-        Date today = new Date(time);
-        System.out.println("input: " + today);
-
         if(mode == ROUND_DOWN) {
             return time - (time % TIME_IN_MS);
         } else if (mode == ROUND_UP) {
@@ -80,7 +78,7 @@ public class DatesManager {
      * @param pattern the format/pattern to format the date into
      * @return the formatted date as a String
      */
-    static String formatDate(Date date, String pattern) {
+    public static String formatDate(Date date, String pattern) {
         DateFormat format = new SimpleDateFormat(pattern);
         return format.format(date);
     }
@@ -91,7 +89,7 @@ public class DatesManager {
      * @param pattern the pattern of the date
      * @return a Date object
      */
-    static Date parseDate(String date, String pattern) throws ParseException {
+    public static Date parseDate(String date, String pattern) throws ParseException {
         DateFormat format = new SimpleDateFormat(pattern);
         return format.parse(date);
     }

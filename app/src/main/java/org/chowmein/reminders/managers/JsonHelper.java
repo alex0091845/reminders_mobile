@@ -21,6 +21,10 @@ import org.chowmein.reminders.model.Event;
  * A helper class to do anything related to the json save file.
  */
 public class JsonHelper {
+    static final String SAVE_FILE_NAME = "saveFile.json";
+    private static final String FILE_EXIST_ERROR = "file doesn't exist";
+
+
     /**
      * Used when reading json objects and parsing them into an ArrayList of Events
      * @param file the json file to read from
@@ -28,7 +32,7 @@ public class JsonHelper {
      */
     public static ArrayList<Event> deserialize(File file) {
         if(!file.exists()) {
-            System.out.println("file doesn't exist");
+            System.out.println(FILE_EXIST_ERROR);
             return null;
         }
         try {
@@ -81,7 +85,7 @@ public class JsonHelper {
             reader.endObject();
 
             // special operation to parse date string into a Date object for the Event
-            Date date = DatesManager.parseDate(dateStr, DatesManager.DATE_PATTERN);
+            Date date = DatesManager.parseDate(dateStr, DatesManager.DATE_PTRN);
 
             Event event = new Event(date, desc, dbr);
             eventList.add(event);
@@ -136,7 +140,7 @@ public class JsonHelper {
     private static void writeEvent(Event event, JsonWriter writer) throws IOException {
         writer.beginObject();
         writer.name(Event.DATE_KEY).value(DatesManager.formatDate(event.getDate(),
-                DatesManager.DATE_PATTERN));
+                DatesManager.DATE_PTRN));
         writer.name(Event.DESC_KEY).value(event.getDesc());
         writer.name(Event.DBR_KEY).value(event.getDbr());
         writer.endObject();

@@ -1,9 +1,6 @@
 package org.chowmein.reminders.viewmodel;
 
-/**
- * The essential class for transforming a collection of data into
- * a collection of ViewHolders that display information to the user
- * on the app.
+/*
  * ------------------------------------------References---------------------------------------------
  * most RecyclerView implementations:
  * https://stackoverflow.com/questions/29795299/what-is-the-sortedlistt-working-with-recyclerview-adapter
@@ -16,7 +13,6 @@ package org.chowmein.reminders.viewmodel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,19 +27,32 @@ import androidx.recyclerview.widget.SortedList;
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.activities.EventFormActivity;
 import org.chowmein.reminders.activities.HomeActivity;
+import org.chowmein.reminders.managers.DatesManager;
+import org.chowmein.reminders.managers.EventManager;
 import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.managers.UIFormatter;
 import org.chowmein.reminders.model.Event;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+/**
+ * The essential class for transforming a collection of data into
+ * a collection of ViewHolders that display information to the user
+ * on the app.
+ */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private SortedList<Event> eventList;
     private RecyclerView view;
 
+    private static final String REQUEST_CODE_KEY = "requestCode";
+    private static final String EVENT_POS_KEY = "eventPos";
+    private static final boolean ATTACH_TO_ROOT = false;
+
+    /**
+     * Constructor to override methods for RecyclerView.Adapter
+     * @param context the context
+     */
     public EventAdapter(Context context) {
         this.view = ((Activity)context).findViewById(R.id.rv_reminders);
         this.eventList = new SortedList<>(Event.class, new SortedList.Callback<Event>() {
@@ -93,6 +102,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         });
     }
 
+    /**
+     * The inner class (ViewHolder) of the adapter.
+     */
     class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener{
         Event event;
@@ -102,6 +114,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         TextView tv_year;
         ConstraintLayout cl_list_item;
 
+        /**
+         * Constructor that creates from a
+         * @param eventView a single view
+         */
         EventViewHolder(View eventView) {
             super(eventView);
             tv_desc = eventView.findViewById(R.id.tv_event_desc);
@@ -119,35 +135,42 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             Context context = view.getContext();
             HomeActivity home = (HomeActivity) context;
 
-            if(home.selectMode) selectEvent(view, context);
+            if(home.selectMode) selectEvent(context);
             else editEvent(home);
         }
 
+        /**
+         * A helper method to edit
+         * @param home the home activity
+         */
         private void editEvent(HomeActivity home) {
             Intent editActivity = new Intent(home, EventFormActivity.class);
-            editActivity.putExtra("requestCode", HomeActivity.EDIT_REQUEST_CODE);
+            editActivity.putExtra(REQUEST_CODE_KEY, HomeActivity.EDIT_REQUEST_CODE);
 
             // gets the event corresponding to the clicked view
             Event event = EventAdapter.this.get(this.getAdapterPosition());
 
             // get all the properties of one event, including its position in the list
-            DateFormat format = new SimpleDateFormat("M/d/yyyy");
-            String dateStr = format.format(event.getDate());
+            String dateStr = DatesManager.formatDate(event.getDate(), DatesManager.DATE_PTRN);
             String desc = event.getDesc();
             int dbr = event.getDbr();
             int eventPosition = eventList.indexOf(event);
 
             // and add them to the intent
-            editActivity.putExtra("date", dateStr);
-            editActivity.putExtra("desc", desc);
-            editActivity.putExtra("dbr", dbr);
-            editActivity.putExtra("eventPos", eventPosition);
+            editActivity.putExtra(Event.DATE_KEY, dateStr);
+            editActivity.putExtra(Event.DESC_KEY, desc);
+            editActivity.putExtra(Event.DBR_KEY, dbr);
+            editActivity.putExtra(EVENT_POS_KEY, eventPosition);
 
             // finally, start the activity
             home.startActivityForResult(editActivity, HomeActivity.EDIT_REQUEST_CODE);
         }
 
-        private void selectEvent(View view, Context context) {
+        /**
+         * A helper method to set and show the view in RecyclerView as being selected.
+         * @param context the context
+         */
+        private void selectEvent(Context context) {
             int adptrPos = this.getAdapterPosition();
             Event event = EventAdapter.this.get(adptrPos);
             event.setSelected(!event.isSelected());
@@ -156,13 +179,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         @Override
         public boolean onLongClick(View view) {
-
             Context context = view.getContext();
             HomeActivity home = (HomeActivity) context;
 
             // enter select mode, if not already
             if(!home.selectMode) {
-                selectEvent(view, context);
+                selectEvent(context);
                 home.toggleSelectMode();
             }
             return true;
@@ -173,46 +195,69 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.event_list_view, parent, false);
+                .inflate(R.layout.event_list_view, parent, ATTACH_TO_ROOT);
         return new EventViewHolder(view);
     }
 
-    public void setStyle(EventViewHolder holder, Event event, Context context) {
+    /**
+     * A helper method to set the style of a ViewHolder.
+     * @param holder the custom EventViewHolder
+     * @param event the Event
+     * @param context the context
+     */
+    private void setStyle(EventViewHolder holder, Event event, Context context) {
+        // if it's the first event in its year, make its ViewHolder's year TextView visible
+        // and set its year correspondingly
         if(event.isYearTop()) {
             holder.tv_year.setVisibility(View.VISIBLE);
-            DateFormat yearFormat = new SimpleDateFormat("yyyy");
-            String yearStr = yearFormat.format(event.getDate());
+            String yearStr = DatesManager.formatDate(event.getDate(), DatesManager.YEAR_PTRN);
             holder.tv_year.setText(yearStr);
         } else {
+            // if not just don't take up any space
             holder.tv_year.setVisibility(View.GONE);
         }
 
+        setTextViewSizes(holder);
+
+        // a ViewHolder being selected overrides all of its other colors/styles
+        if (event.isSelected()) {
+            holder.cl_list_item.setBackground(ContextCompat.getDrawable(context,
+                    R.drawable.item_bg_blue));
+            setTextViewColors(holder, R.color.white);
+        }
+        // set style based on position (alternating colors)
+        else if (holder.getAdapterPosition() % 2 == 1) {
+            holder.cl_list_item.setBackground(ContextCompat.getDrawable(context,
+                    R.drawable.item_bg_gray));
+            setTextViewColors(holder, R.color.darkGray);
+        } else {
+            holder.cl_list_item.setBackground(ContextCompat.getDrawable(context,
+                    R.drawable.item_bg_red));
+            setTextViewColors(holder, R.color.white);
+        }
+    }
+
+    /**
+     * A helper method to specifically set the colors of the tv_desc, tv_date, and tv_dbr TextViews
+     * inside a ViewHolder.
+     * @param holder the EventViewHolder
+     * @param color the color to assign all TextViews
+     */
+    private void setTextViewColors(EventViewHolder holder, int color) {
+        holder.tv_desc.setTextColor(color);
+        holder.tv_date.setTextColor(color);
+        holder.tv_dbr.setTextColor(color);
+    }
+
+    /**
+     * Sets the TextView font sizes within a ViewHolder appropriately.
+     * @param holder the EventViewHolder
+     */
+    private void setTextViewSizes(EventViewHolder holder) {
         holder.tv_desc.setTextSize(Preferences.fontSize);
         holder.tv_date.setTextSize(Preferences.fontSize);
         holder.tv_dbr.setTextSize(Preferences.fontSize - UIFormatter.SMALL_OFFSET);
         holder.tv_year.setTextSize(Preferences.fontSize - UIFormatter.MEDIUM_OFFSET);
-
-        // set style based on position
-        if (event.isSelected()) {
-            holder.cl_list_item.setBackground(ContextCompat.getDrawable(context, R.drawable.item_bg_blue));
-            int white = Color.parseColor("#FFFFFF");
-            holder.tv_desc.setTextColor(white);
-            holder.tv_date.setTextColor(white);
-            holder.tv_dbr.setTextColor(white);
-        }
-        else if (holder.getAdapterPosition() % 2 == 1) {
-            holder.cl_list_item.setBackground(ContextCompat.getDrawable(context, R.drawable.item_bg_gray));
-            int darkGray = Color.parseColor("#393939");
-            holder.tv_desc.setTextColor(darkGray);
-            holder.tv_date.setTextColor(darkGray);
-            holder.tv_dbr.setTextColor(darkGray);
-        } else {
-            holder.cl_list_item.setBackground(ContextCompat.getDrawable(context, R.drawable.item_bg_red));
-            int white = Color.parseColor("#FFFFFF");
-            holder.tv_desc.setTextColor(white);
-            holder.tv_date.setTextColor(white);
-            holder.tv_dbr.setTextColor(white);
-        }
     }
 
     @Override
@@ -222,31 +267,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         // sets the easy data textviews
         holder.tv_desc.setText(event.getDesc());
-        holder.tv_dbr.setText(event.getDbr() + " days before");
+        holder.tv_dbr.setText(EventManager.getDaysAwayString(event.getDbr()));
 
         // sets the date textview
-        DateFormat dateFormat = new SimpleDateFormat("M/d"); // format to only month and day
-        String dateStr = dateFormat.format(event.getDate());
+        String dateStr = DatesManager.formatDate(event.getDate(), DatesManager.MONTH_DAY_PTRN);
         holder.tv_date.setText(dateStr);
 
         // sets the year textview
-        DateFormat yearFormat = new SimpleDateFormat("yyyy");
-        String yearStr = yearFormat.format(event.getDate());
+        String yearStr = DatesManager.formatDate(event.getDate(), DatesManager.YEAR_PTRN);
         holder.tv_year.setText(yearStr);
 
-        // if the event before this is of a different year, set its yearTop to true
-        // or if the event is the first
-        if (position != 0) {
-            Event previousEvent = eventList.get(position - 1);
-            String prevYearStr = yearFormat.format(previousEvent.getDate());
-            int prevYear = Integer.parseInt(prevYearStr);
-            int currYear = Integer.parseInt(yearStr);
-            if(prevYear < currYear) {
-                event.setYearTop(true);
-            } else {
-                event.setYearTop(false);
-            }
-        }
+        // set the event's yearTop field
+        setYearTop(event, position, yearStr);
 
         // cheating here, since we can't make a context static
         Context context = HomeActivity.getAdapter().view.getContext();
@@ -255,31 +287,78 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         setStyle(holder, event, context);
     }
 
+    /**
+     * If the event before this is of a different year, set its yearTop to true.
+     * @param event the Event
+     * @param position its position
+     * @param currYearStr the String for event's year
+     */
+    private void setYearTop(Event event, int position, String currYearStr) {
+        // the first ViewHolder's year will be handled by the year TextView in HomeActivity
+        if (position != 0) {
+            Event previousEvent = eventList.get(position - 1);
+            String prevYearStr = DatesManager.formatDate(previousEvent.getDate(),
+                    DatesManager.YEAR_PTRN);
+            int prevYear = Integer.parseInt(prevYearStr);
+            int currYear = Integer.parseInt(currYearStr);
+            if(prevYear < currYear) {
+                event.setYearTop(true);
+            } else {
+                event.setYearTop(false);
+            }
+        }
+    }
+
     @Override
     public int getItemCount() {
         return eventList.size();
     }
 
+    /**
+     * Returns eventList.
+     */
     public SortedList<Event> getEventList() {
         return eventList;
     }
 
+    /**
+     * Gets the Event at some index of the eventList.
+     * @param index the index of the Event in eventList
+     * @return the Event in eventList at that index
+     */
     public Event get(int index) {
         return eventList.get(index);
     }
 
-    public int add(Event event) {
-        return eventList.add(event);
+    /**
+     * Adds an Event to the eventList.
+     * @param event the Event to be added
+     */
+    public void add(Event event) {
+        eventList.add(event);
     }
 
+    /**
+     * Updates an Event at the position index in eventList.
+     * @param position the position index
+     * @param updatedEvent the new (or the same) Event
+     */
     public void update(int position, Event updatedEvent) {
         eventList.updateItemAt(position, updatedEvent);
     }
 
-    public Event removeAtIndex(int position) {
-        return eventList.removeItemAt(position);
+    /**
+     * Removes an Event at position index in eventList.
+     * @param position the Event index in eventList
+     */
+    public void removeAtIndex(int position) {
+        eventList.removeItemAt(position);
     }
 
+    /**
+     * Adds a list of Events to eventList.
+     * @param list the list of Event to add to eventList
+     */
     public void addAll(ArrayList<Event> list) {
         if(list == null) return;
         for(Event event : list) {
