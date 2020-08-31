@@ -1,6 +1,6 @@
 package org.chowmein.reminders.activities;
 
-/**
+/*
  * Resources: Baeldung -- getting year, month, dayOfMonth from Date API
  *            How to manage startActivityForResult on Android:
  * https://stackoverflow.com/questions/10407159/how-to-manage-startactivityforresult-on-android#:~:text=First%20you%20use%20startActivityForResult(),()%20method%20in%20first%20Activity%20.
@@ -10,29 +10,31 @@ package org.chowmein.reminders.activities;
  */
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.chowmein.reminders.managers.DatesManager;
 import org.chowmein.reminders.model.Event;
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.managers.UIFormatter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * The Activity for editing an event and adding an event.
+ */
 public class EventFormActivity extends AppCompatActivity {
 
     Button btn_date;
-    TextView tv_title;
+    Toolbar tb_title;
     EditText edt_desc;
     EditText edt_dbr;
     Bundle bundle;
@@ -45,22 +47,27 @@ public class EventFormActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_form);
 
         this.bundle = getIntent().getExtras();
-        this.requestCode = this.bundle.getInt("requestCode");
+        this.requestCode = this.bundle.getInt(HomeActivity.REQUEST_CODE_KEY);
 
         try {
             this.getSupportActionBar().hide();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.out.println("Support Action bar hiding error");
+        }
 
         initViews();
 
         // gets the event position if on edit mode
         // also set the fields to match the data of the event
         if(this.requestCode == HomeActivity.EDIT_REQUEST_CODE) {
-            this.eventPosition = bundle.getInt("eventPos");
+            this.eventPosition = bundle.getInt(HomeActivity.EVENT_POS_KEY);
             populateViewData();
         }
     }
 
+    /**
+     * A helper method to initialize the instance variables.
+     */
     private void initViews() {
         // Here, the onSubmitButtonClicked() method acts for both add and edit
         // buttons. Their code only differed by 1 line, so I used the requestCode
@@ -71,7 +78,7 @@ public class EventFormActivity extends AppCompatActivity {
         btn_submit.setOnClickListener(e -> onSubmitButtonClicked());
 
         // init other instance vars
-        tv_title = findViewById(R.id.tv_title_event_form);
+        tb_title = findViewById(R.id.tb_title_event_form);
         btn_date = findViewById(R.id.btn_date);
         edt_desc = findViewById(R.id.edt_desc);
         edt_dbr = findViewById(R.id.edt_dbr);
@@ -80,15 +87,14 @@ public class EventFormActivity extends AppCompatActivity {
 
         if(requestCode == HomeActivity.ADD_REQUEST_CODE) {
             Date today = new Date();
-            DateFormat format = new SimpleDateFormat("M/d/yyyy");
-            dateStr = format.format(today);
+            dateStr = DatesManager.formatDate(today, DatesManager.DATE_PTRN);
         } else {
-            dateStr = this.bundle.getString("date");
+            dateStr = this.bundle.getString(Event.DATE_KEY);
 
             // set title to appear as editing a reminder
-            this.tv_title.setText("Edit a reminder");
+            this.tb_title.setTitle("Edit a reminder");
             // set it to appear as the EDIT button
-            btn_submit.setText("Edit");
+            btn_submit.setText(R.string.edit_btn_text);
         }
 
         // common to both edit and add
@@ -98,18 +104,27 @@ public class EventFormActivity extends AppCompatActivity {
         UIFormatter.format(this, UIFormatter.ADDEDIT);
     }
 
+    /**
+     * A helper method to populate the Event's data onto the corresponding fields when the user
+     * wants to edit it.
+     */
     private void populateViewData() {
         // get the event properties
-        String dateStr = this.bundle.getString("date");
-        String desc = this.bundle.getString("desc");
-        int dbr = this.bundle.getInt("dbr");
+        String dateStr = this.bundle.getString(Event.DATE_KEY);
+        String desc = this.bundle.getString(Event.DESC_KEY);
+        int dbr = this.bundle.getInt(Event.DBR_KEY);
+        String dbrStr = String.valueOf(dbr);
 
         // set each input field to have the corresponding values of those properties
         this.btn_date.setText(dateStr);
         this.edt_desc.setText(desc);
-        this.edt_dbr.setText(dbr + "");
+        this.edt_dbr.setText(dbrStr);
     }
 
+    /**
+     * The callback method for when the "submit" (add/edit) button is clicked, differentiated
+     * by the request code.
+     */
     private void onSubmitButtonClicked() {
         Intent data = new Intent();
 
@@ -124,37 +139,48 @@ public class EventFormActivity extends AppCompatActivity {
         int dbr = Integer.parseInt(dbrStr);
 
         // parse the date string into a long (time in milliseconds)
-        DateFormat format = new SimpleDateFormat("M/d/yyyy");
         long time = 0;
-
         try {
-            time = format.parse(dateStr).getTime();
-        } catch (Exception e) {}
+            time = DatesManager.parseDate(dateStr, DatesManager.DATE_PTRN).getTime();
+        } catch (Exception e) {
+            System.out.println("Date parsing error in onSubmitButtonClicked(), EventFormActivity");
+        }
 
         // put the info into the data intent
-        data.putExtra("date", time);
-        data.putExtra("desc", desc);
-        data.putExtra("dbr", dbr);
+        data.putExtra(Event.DATE_KEY, time);
+        data.putExtra(Event.DESC_KEY, desc);
+        data.putExtra(Event.DBR_KEY, dbr);
         if(requestCode == HomeActivity.EDIT_REQUEST_CODE) {
-            data.putExtra("eventPos", this.eventPosition);
+            data.putExtra(HomeActivity.EVENT_POS_KEY, this.eventPosition);
         }
 
         setResult(RESULT_OK, data);
         finish();
     }
 
+    /**
+     * A helper method to determine whether this Event is a duplicate.
+     * @param dateStr the Event's date as String
+     * @param desc the Event's description
+     * @param dbrStr the Event's dbr as String
+     * Returns true if there's a duplicate. False otherwise.
+     */
     private boolean duplicate(String dateStr, String desc, String dbrStr) {
-        DateFormat format = new SimpleDateFormat("M/d/yyyy");
         Date date = new Date();
         try {
-            date = format.parse(dateStr);
-        } catch (Exception e) {};
+            date = DatesManager.parseDate(dateStr, DatesManager.DATE_PTRN);
+        } catch (Exception e) {
+            System.out.println("Date parsing error in duplicate(), EventFormActivity");
+        }
 
         int dbr = Integer.parseInt(dbrStr);
 
-        // in edit, maybe remove the event first and then add it?
         Event event = new Event(date, desc, dbr);
+
+        // try to find the Event in HomeActivity through the adapter
         int eventIndex = HomeActivity.getAdapter().getEventList().indexOf(event);
+
+        // if the event is there already, it will return an index greater than -1.
         if(eventIndex > -1) {
             alertDuplicateEvent();
             return true;
@@ -162,35 +188,46 @@ public class EventFormActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * The callback method for when the date button is clicked. It will trigger the DatePicker
+     * dialog box and allow the user to choose a date.
+     */
     private void onDateButtonClicked() {
         Calendar cal = Calendar.getInstance();
 
         if(requestCode == HomeActivity.EDIT_REQUEST_CODE) {
-            // gets the date string from btn_date and parse it into a Date object
-            DateFormat format = new SimpleDateFormat("M/d/yyyy");
-
+            // gets the date string from btn_date and parse it into a Date object and
             // set the calendar's date to match that
             try {
-                Date date = format.parse((String) btn_date.getText());
+                Date date = DatesManager.parseDate((String) btn_date.getText(),
+                        DatesManager.DATE_PTRN);
                 cal.setTime(date);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                System.out.println("Date parsing error in onDateButtonClicked(), " +
+                        "EventFormActivity");
+            }
         }
 
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
         int dom = cal.get(Calendar.DAY_OF_MONTH);
         DatePickerDialog dpDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                String dateStr = (month + 1) + "/" + day + "/" + year;
-                btn_date.setText(dateStr);
-            }
-        },
+                (datePicker, year1, month1, day) -> {
+                    String dateStr = (month1 + 1) + "/" + day + "/" + year1;
+                    btn_date.setText(dateStr);
+                },
                 year, month, dom);
         dpDialog.show();
     }
 
+    /**
+     * A helper method to validate that the description and the dbr inputs and are not empty
+     * or ill-formatted. A warning dialog will show up telling the user that they had filled out
+     * badly formatted values or they missed something.
+     * @param desc the description input
+     * @param dbrStr the dbr input
+     * Returns true if both are valid. False otherwise.
+     */
     private boolean validateFields(String desc, String dbrStr) {
         try {
             Integer.parseInt(dbrStr);
@@ -206,21 +243,28 @@ public class EventFormActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * A helper method to show an AlertDialog telling the user the inputs are invalid.
+     */
     private void alertInvalidFields() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this)
                 .setTitle("Invalid inputs")
                 .setMessage("Your inputs for one or more fields is invalid")
                 .setPositiveButton("OK", null);
 
-        AlertDialog dialog = dialogBuilder.show();
+        dialogBuilder.show();
     }
 
+    /**
+     * A helper method to show an AlertDialog telling the user that they already have the same
+     * exact Event.
+     */
     private void alertDuplicateEvent() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this)
                 .setTitle("Duplicate event")
                 .setMessage("Your already have this event!")
                 .setPositiveButton("OK", null);
 
-        AlertDialog dialog = dialogBuilder.show();
+        dialogBuilder.show();
     }
 }

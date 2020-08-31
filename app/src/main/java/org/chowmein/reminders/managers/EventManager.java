@@ -48,6 +48,7 @@ public class EventManager {
     public final static String REGISTER_ALARM_ACTION = "REGISTER_ALARM";
     private static final String NOTIFICATION_CHANNEL_NAME = "On boot";
     private static final String NOTIFICATION_CHANNEL_DESC = "Remind events";
+    private static final int SMALL_ICON_RES = R.mipmap.ic_notif_small;
 
     private static ArrayList<Event> reminders;
 
@@ -116,7 +117,10 @@ public class EventManager {
                 reminderBuilder.setSound(Preferences.ringtoneUri);
             }
 
-            Notification reminder = reminderBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
+            int notifColor = context.getResources().getColor(R.color.maliblue);
+
+            Notification reminder = reminderBuilder.setSmallIcon(SMALL_ICON_RES)
+                    .setColor(notifColor)
                     .setContentTitle(e.getDesc())
                     .setContentText(getDaysAwayString(daysUntilEvent(e)))
                     .build();
@@ -155,7 +159,7 @@ public class EventManager {
      * the application and properly remind users then.
      * @param context the context
      */
-    private static void registerAlarmTomorrow(Context context) {
+    public static void registerAlarmTomorrow(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         // create PendingIntent for the alarm to use
@@ -205,7 +209,7 @@ public class EventManager {
      * @param days number of days until the event
      * @return the String prose
      */
-    public static String getDaysAwayString(int days) {
+    private static String getDaysAwayString(int days) {
         String daysAway;
 
         if(days > 1)        daysAway = "In " + days + " days";

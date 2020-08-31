@@ -1,4 +1,4 @@
-package org.chowmein.reminders.viewmodel;
+package org.chowmein.reminders.controller;
 
 /*
  * ------------------------------------------References---------------------------------------------
@@ -8,6 +8,8 @@ package org.chowmein.reminders.viewmodel;
  * https://dzone.com/articles/click-listener-for-recyclerview-adapter
  * multiple view selection:
  * https://medium.com/@droidbyme/android-recyclerview-with-single-and-multiple-selection-5d50c0c4c739
+ * get color from resources:
+ * https://mobikul.com/use-color-contextcompat-android/
  */
 
 import android.app.Activity;
@@ -28,7 +30,6 @@ import org.chowmein.reminders.R;
 import org.chowmein.reminders.activities.EventFormActivity;
 import org.chowmein.reminders.activities.HomeActivity;
 import org.chowmein.reminders.managers.DatesManager;
-import org.chowmein.reminders.managers.EventManager;
 import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.managers.UIFormatter;
 import org.chowmein.reminders.model.Event;
@@ -223,17 +224,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         if (event.isSelected()) {
             holder.cl_list_item.setBackground(ContextCompat.getDrawable(context,
                     R.drawable.item_bg_blue));
-            setTextViewColors(holder, R.color.white);
+            setTextViewColors(holder, ContextCompat.getColor(context, R.color.white));
         }
         // set style based on position (alternating colors)
         else if (holder.getAdapterPosition() % 2 == 1) {
             holder.cl_list_item.setBackground(ContextCompat.getDrawable(context,
-                    R.drawable.item_bg_gray));
-            setTextViewColors(holder, R.color.darkGray);
+                    R.drawable.ripple_gray));
+            setTextViewColors(holder, ContextCompat.getColor(context, R.color.darkGray));
         } else {
             holder.cl_list_item.setBackground(ContextCompat.getDrawable(context,
-                    R.drawable.item_bg_red));
-            setTextViewColors(holder, R.color.white);
+                    R.drawable.ripple_red));
+            setTextViewColors(holder, ContextCompat.getColor(context, R.color.white));
         }
     }
 
@@ -267,7 +268,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         // sets the easy data textviews
         holder.tv_desc.setText(event.getDesc());
-        holder.tv_dbr.setText(EventManager.getDaysAwayString(event.getDbr()));
+        holder.tv_dbr.setText(event.getDbr() + " days before");
 
         // sets the date textview
         String dateStr = DatesManager.formatDate(event.getDate(), DatesManager.MONTH_DAY_PTRN);

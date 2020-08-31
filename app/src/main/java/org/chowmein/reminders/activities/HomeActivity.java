@@ -1,5 +1,14 @@
 package org.chowmein.reminders.activities;
 
+/*
+ * ------------------------------------------References---------------------------------------------
+ *  * ItemDecoration (setting each item's margins):
+ *  https://medium.com/mobile-app-development-publication/right-way-of-setting-margin-on-recycler-views-cell-319da259b641
+ *  * Settings/Preferences:
+ *  https://stackoverflow.com/questions/39439039/how-to-add-overflow-menu-to-toolbar
+ *  https://alvinalexander.com/android/android-tutorial-preferencescreen-preferenceactivity-preferencefragment/
+ */
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,32 +22,28 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.chowmein.reminders.managers.DatesManager;
+import org.chowmein.reminders.managers.EventManager;
 import org.chowmein.reminders.model.Event;
-import org.chowmein.reminders.viewmodel.EventAdapter;
-import org.chowmein.reminders.viewmodel.EventItemDecoration;
+import org.chowmein.reminders.controller.EventAdapter;
+import org.chowmein.reminders.controller.EventItemDecoration;
 import org.chowmein.reminders.managers.JsonHelper;
 import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.managers.UIFormatter;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * ------------------------------------------References---------------------------------------------
- *  * ItemDecoration (setting each item's margins):
- *  https://medium.com/mobile-app-development-publication/right-way-of-setting-margin-on-recycler-views-cell-319da259b641
- *  * Settings/Preferences:
- *  https://stackoverflow.com/questions/39439039/how-to-add-overflow-menu-to-toolbar
- *  https://alvinalexander.com/android/android-tutorial-preferencescreen-preferenceactivity-preferencefragment/
- *
  * The main displaying activity. Displays the reminders/events in a RecyclerView, where there is
  * a year text display at the top showing the current year (because the events themselves only show
  * the date, not the year). Has an add button and a delete button (which only shows up when the user
@@ -54,20 +59,29 @@ public class HomeActivity extends AppCompatActivity {
     public final static String DATE_KEY = "date";
     public final static String EVENT_POS_KEY = "eventPos";
     public final static String REQUEST_CODE_KEY = "requestCode";
-    public final static String SAVE_FILE_NAME = "saveFile.json";
+    public static final String IN_SELECT_MODE_KEY = "IN_SELECT_MODE";
 
     static EventAdapter adapter;
     LinearLayoutManager layoutManager;
     File saveFile;
     public boolean selectMode;
 
-    RecyclerView rv_reminders;
+    ImageView imgvEmpty;
+    RecyclerView rvReminders;
     TextView tvHomeYear;
     FloatingActionButton btnAdd;
     FloatingActionButton btnDelete;
     Toolbar toolbar;
 
     SortedList<Event> eventSortedList;
+
+    Animation fab_show_delete;
+    Animation fab_hide_add;
+    Animation fab_show_add;
+    Animation fab_hide_delete;
+    Animation imgv_show_empty;
+    Animation tv_hide_home_year;
+    Animation tv_show_home_year;
 
     /**
      * A callback method triggered when the activity is starting.
@@ -79,34 +93,54 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Preferences.loadPreferences(this);
-
-        // deserialize from the save file and populate the RecyclerView adapter and SortedList
-        saveFile = new File(this.getFilesDir().getPath(), SAVE_FILE_NAME);
-        adapter = new EventAdapter(this);
-        adapter.addAll(JsonHelper.deserialize(saveFile));
-        eventSortedList = adapter.getEventList();
+        saveFile = new File(this.getFilesDir().getPath(), JsonHelper.SAVE_FILE_NAME);
 
         // includes setting font size (formatting the home activity)
-        initViews(savedInstanceState);
+        initViews();
+
+        // prevents from re-initializing because of configuration changes
+        if(savedInstanceState == null) {
+            Preferences.loadPreferences(this);
+
+            // deserialize from the save file and populate the RecyclerView adapter and SortedList
+            adapter = new EventAdapter(this);
+            adapter.addAll(JsonHelper.deserialize(saveFile));
+        } else {
+            boolean selectMode = savedInstanceState.getBoolean(IN_SELECT_MODE_KEY);
+            setSelectMode(selectMode);
+        }
+
+        eventSortedList = adapter.getEventList();
+
+        // set up the views that require more detailed implementations
+        setSupportActionBar(toolbar);
+        initRecyclerView();
+        setTvHomeYear(savedInstanceState);
+
+        // just ensures that the alarm is set
+        EventManager.registerAlarmTomorrow(this);
     }
 
     /**
      * A helper method to initialize all the views and their implementations properly.
-     * @param savedInstanceState the saved instance state, required to set the year text.
      */
-    private void initViews(Bundle savedInstanceState) {
+    private void initViews() {
         // initialize all views first
-        this.rv_reminders = findViewById(R.id.rv_reminders);
+        this.rvReminders = findViewById(R.id.rv_reminders);
+        this.imgvEmpty = findViewById(R.id.imgV_empty);
         this.toolbar = findViewById(R.id.tb_title);
         this.tvHomeYear = findViewById(R.id.tv_home_year);
         this.btnAdd = findViewById(R.id.btn_add);
         this.btnDelete = findViewById(R.id.btn_delete);
 
-        // set up the views that require more detailed implementations
-        setSupportActionBar(toolbar);
-        initRecyclerView();
-        initTvHomeYear(savedInstanceState);
+        // init all animations
+        this.imgv_show_empty = AnimationUtils.loadAnimation(this, R.anim.imgv_show_empty);
+        this.fab_show_delete = AnimationUtils.loadAnimation(this, R.anim.fab_show_delete);
+        this.fab_hide_add = AnimationUtils.loadAnimation(this, R.anim.fab_hide_add);
+        this.fab_show_add = AnimationUtils.loadAnimation(this, R.anim.fab_show_add);
+        this.fab_hide_delete = AnimationUtils.loadAnimation(this, R.anim.fab_hide_delete);
+        this.tv_hide_home_year = AnimationUtils.loadAnimation(this, R.anim.tv_hide_home_year);
+        this.tv_show_home_year = AnimationUtils.loadAnimation(this, R.anim.tv_show_home_year);
 
         btnAdd.setOnClickListener(e -> onBtnAddClicked());
         btnDelete.setOnClickListener(e -> onBtnDelClicked());
@@ -120,15 +154,15 @@ public class HomeActivity extends AppCompatActivity {
      * year text at the top can display properly.
      */
     private void initRecyclerView() {
-        rv_reminders.setHasFixedSize(true);
-        rv_reminders.setLayoutManager(new LinearLayoutManager(this));
-        rv_reminders.setAdapter(adapter);
-        layoutManager = (LinearLayoutManager) rv_reminders.getLayoutManager();
+        rvReminders.setHasFixedSize(true);
+        rvReminders.setLayoutManager(new LinearLayoutManager(this));
+        rvReminders.setAdapter(adapter);
+        layoutManager = (LinearLayoutManager) rvReminders.getLayoutManager();
 
         EventItemDecoration itemDeco = new EventItemDecoration(10);
-        rv_reminders.addItemDecoration(itemDeco);
+        rvReminders.addItemDecoration(itemDeco);
 
-        rv_reminders.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rvReminders.addOnScrollListener(new RecyclerView.OnScrollListener() {
             /** just for override purposes. No real implementations here */
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -143,14 +177,19 @@ public class HomeActivity extends AppCompatActivity {
              */
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                int firstVisPos = layoutManager.findFirstVisibleItemPosition();
-                Event firstVisEvent = adapter.get(firstVisPos);
-                int firstCompVisPos = layoutManager.findFirstCompletelyVisibleItemPosition();
-                Event firstCompVisEvent = adapter.get(firstCompVisPos);
+                if(adapter.getItemCount() != 0) {
+                    int firstVisPos = layoutManager.findFirstVisibleItemPosition();
+                    Event firstVisEvent = adapter.get(firstVisPos);
+                    int firstCompVisPos = layoutManager.findFirstCompletelyVisibleItemPosition();
+                    Event firstCompVisEvent = adapter.get(firstCompVisPos);
 
-                // scrolls downwards || scrolls upwards
-                if((dy > 0 && firstVisEvent.isYearTop()) || (dy < 0 && firstCompVisEvent.isYearTop())) {
-                    tvHomeYear.setText(firstVisEvent.getYear());
+                    // scrolls downwards || scrolls upwards
+                    if ((dy > 0 && firstVisEvent.isYearTop())
+                            || (dy < 0 && firstCompVisEvent.isYearTop())) {
+                        tvHomeYear.setText(firstVisEvent.getYear());
+                    }
+                } else {
+                    tvHomeYear.setVisibility(View.GONE);
                 }
 
                 super.onScrolled(recyclerView, dx, dy);
@@ -163,19 +202,33 @@ public class HomeActivity extends AppCompatActivity {
      * savedInstanceState to initialize in case of a configuration change.
      * @param savedInstanceState the savedInstanceState
      */
-    private void initTvHomeYear(Bundle savedInstanceState) {
-        // if there are no events, make the year text invisible
-        if (adapter.getEventList().size() == 0) {
-            tvHomeYear.setVisibility(View.GONE);
-        }
+    private void setTvHomeYear(Bundle savedInstanceState) {
+        // set the visibility first
+        setViewsVis();
 
         // sets the year's text to either the first event in the adapter or the year seen in the
         // last configuration
         if(savedInstanceState != null) {
             String homeYear = savedInstanceState.getString(HOME_YEAR_KEY);
             tvHomeYear.setText(homeYear);
-        } else {
+        } else if (adapter.getEventList().size() != 0){
             tvHomeYear.setText(adapter.get(0).getYear());
+        }
+    }
+
+    /**
+     * A helper method to set the visibility of tvHomeYear and imgvEmpty.
+     */
+    private void setViewsVis() {
+        // if there are no events, show that there are no reminders
+        if (adapter.getEventList().size() == 0) {
+            tvHomeYear.setVisibility(View.GONE);
+            imgvEmpty.setVisibility(View.VISIBLE);
+            imgvEmpty.startAnimation(this.imgv_show_empty);
+        } else {
+            // otherwise, hide it and make home year TextView visible
+            imgvEmpty.setVisibility(View.GONE);
+            tvHomeYear.setVisibility(View.VISIBLE);
         }
     }
 
@@ -219,17 +272,25 @@ public class HomeActivity extends AppCompatActivity {
      * The callback method triggered when the "delete" floating action button is clicked.
      */
     private void onBtnDelClicked() {
-        int size = eventSortedList.size();
-
         // goes over the list and delete; the index i is dynamically decremented to prevent
         // under-deletion (e.g., when an item gets deleted, the next item replaces it at the index
         // i, but i++ will skip over that next item, so i-- compensates for that movement).
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < eventSortedList.size(); i++) {
             if (eventSortedList.get(i).isSelected()) {
                 adapter.removeAtIndex(i);
                 i--;
             }
         }
+
+        // ensures that the first view doesn't have the year displayed and also that tvHomeYear
+        // is set to display the correct year
+        if(adapter.getItemCount() > 0) {
+            adapter.get(0).setYearTop(false);
+        } else {
+            this.tvHomeYear.startAnimation(this.tv_hide_home_year);
+        }
+
+        setTvHomeYear(null);
 
         this.toggleSelectMode();
     }
@@ -241,7 +302,9 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        JsonHelper.serialize(eventSortedList, this.saveFile);
+        JsonHelper.serialize(
+                eventSortedList,
+                this.saveFile);
     }
 
     /**
@@ -283,6 +346,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         String homeYear = (String) ((TextView)findViewById(R.id.tv_home_year)).getText();
         outState.putString(HOME_YEAR_KEY, homeYear);
+        outState.putBoolean(IN_SELECT_MODE_KEY, selectMode);
 
         super.onSaveInstanceState(outState);
     }
@@ -300,19 +364,23 @@ public class HomeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Bundle bundle = data.getExtras();
+        Bundle bundle = null;
+        if(data != null) {
+            bundle = data.getExtras();
+        }
 
         if(bundle != null) {
             if (resultCode == RESULT_OK) {
                 // parse all necessary fields
-                String desc = bundle.getString("desc");
+                String desc = bundle.getString(Event.DESC_KEY);
 
-                int dbr = bundle.getInt("dbr");
+                int dbr = bundle.getInt(Event.DBR_KEY);
                 Date date = null;
 
-                DateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
                 try {
-                    date = dateFormat.parse(dateFormat.format(bundle.getLong(DATE_KEY)));
+                    Date tempDate = new Date(bundle.getLong(DATE_KEY));
+                    String dateStr = DatesManager.formatDate(tempDate, DatesManager.DATE_PTRN);
+                    date = DatesManager.parseDate(dateStr, DatesManager.DATE_PTRN);
                 } catch (Exception e) {
                     System.out.println("Error formatting date in HomeActivity");
                 }
@@ -321,11 +389,21 @@ public class HomeActivity extends AppCompatActivity {
                 Event event = new Event(date, desc, dbr);
 
                 // check if the activity returned was the "add" or the "edit" version
-                if (requestCode == ADD_REQUEST_CODE) adapter.add(event);
+                if (requestCode == ADD_REQUEST_CODE) {
+                    adapter.add(event);
+
+                    // if the event was only added just now, start the show animation
+                    if(adapter.getItemCount() == 1) {
+                        this.tvHomeYear.startAnimation(this.tv_show_home_year);
+                    }
+                }
                 else if (requestCode == EDIT_REQUEST_CODE) {
                     int eventPosition = bundle.getInt(EVENT_POS_KEY);
                     adapter.update(eventPosition, event);
                 }
+
+                // update tvHomeYear every time an item gets added
+                setTvHomeYear(null);
             }
         }
     }
@@ -355,6 +433,27 @@ public class HomeActivity extends AppCompatActivity {
      */
     public void toggleSelectMode() {
         if (!this.selectMode) {
+            setSelectMode(true);
+
+            // animations
+            btnDelete.startAnimation(fab_show_delete);
+            btnAdd.startAnimation(fab_hide_add);
+        } else {
+            setSelectMode(false);
+
+            // animations
+            btnDelete.startAnimation(fab_hide_delete);
+            btnAdd.startAnimation(fab_show_add);
+        }
+    }
+
+    /**
+     * A helper method to set the select modes and make certain buttons visible (or not) only.
+     * Does not start animations.
+     * @param selectMode whether to set the selectMode to true or false
+     */
+    private void setSelectMode(boolean selectMode) {
+        if(selectMode) {
             this.selectMode = true;
             btnAdd.setVisibility(View.INVISIBLE);
             btnDelete.setVisibility(View.VISIBLE);

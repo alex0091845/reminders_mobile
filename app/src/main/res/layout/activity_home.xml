@@ -5,7 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F2F2F2"
+    android:background="@color/lightGray"
     tools:context=".activities.HomeActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -15,9 +15,9 @@
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
         android:clickable="true"
-        android:src="@android:drawable/ic_menu_delete"
+        android:src="@mipmap/delete_icon"
         android:visibility="invisible"
-        app:backgroundTint="#FF4646"
+        app:backgroundTint="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -26,6 +26,7 @@
         app:layout_constraintVertical_bias="1.0"
         app:maxImageSize="18dp"
         app:useCompatPadding="false"
+        app:rippleColor="@color/white"
         android:focusable="true" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -35,9 +36,9 @@
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
         android:clickable="true"
-        android:src="@drawable/add_icon"
+        android:src="@mipmap/add_icon"
         android:visibility="visible"
-        app:backgroundTint="#FF4646"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -46,6 +47,7 @@
         app:layout_constraintVertical_bias="1.0"
         app:maxImageSize="18dp"
         app:useCompatPadding="false"
+        app:rippleColor="@color/white"
         android:focusable="true" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -64,7 +66,7 @@
         android:background="@drawable/header_bar"
         android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        app:titleTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,5 +86,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tb_title" />
+
+    <ImageView
+        android:id="@+id/imgV_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/lightGray"
+        android:cropToPadding="false"
+        android:scaleType="centerInside"
+        android:scaleX=".8"
+        android:scaleY=".8"
+        android:src="@mipmap/empty_rem"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_home_year" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

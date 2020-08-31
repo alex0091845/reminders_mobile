@@ -21,9 +21,8 @@ import org.chowmein.reminders.model.Event;
  * A helper class to do anything related to the json save file.
  */
 public class JsonHelper {
-    static final String SAVE_FILE_NAME = "saveFile.json";
+    public static final String SAVE_FILE_NAME = "saveFile.json";
     private static final String FILE_EXIST_ERROR = "file doesn't exist";
-
 
     /**
      * Used when reading json objects and parsing them into an ArrayList of Events

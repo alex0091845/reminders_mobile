@@ -1,10 +1,9 @@
 package org.chowmein.reminders.activities;
 
-/**
+/*
  * -----------------------------References
  * Get ringtone info:
  * https://stackoverflow.com/questions/7671637/how-to-set-ringtone-with-ringtonemanager-action-ringtone-picker
- *
  */
 
 import android.content.Intent;
@@ -25,6 +24,9 @@ import androidx.preference.PreferenceManager;
 import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.R;
 
+/**
+ * The Activity for when the user needs to adjust Settings.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
@@ -37,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
         // if any prefs have changed, set prefsChanged to true
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(
-                (preference, newValue) -> { Preferences.prefsChanged = true; }
+                (preference, newValue) -> Preferences.prefsChanged = true
         );
 
         setContentView(R.layout.settings_activity);
@@ -51,6 +53,10 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * The inner class (generated) fragment. It loads all the initial values of the settings, and
+     * implements how the user will interact with each setting.
+     */
     public static class SettingsFragment extends PreferenceFragmentCompat{
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -59,7 +65,8 @@ public class SettingsActivity extends AppCompatActivity {
             // go through all this just to get the name of the ringtone
             SharedPreferences sharedPrefs = PreferenceManager
                     .getDefaultSharedPreferences(this.getContext());
-            String ringtoneStr = sharedPrefs.getString("ringtone", "Silent");
+            String ringtoneStr = sharedPrefs.getString(Preferences.RINGTONE_KEY,
+                    Preferences.DEFAULT_RINGTONE_VALUE);
 
             // default uri to null, then set if not Silent
             Uri ringtoneUri = Uri.parse(ringtoneStr);
@@ -71,14 +78,15 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             // set up the ringtonePicker intent and onClick listener
-            Preference ringtonePref = findPreference("ringtone");
+            Preference ringtonePref = findPreference(Preferences.RINGTONE_KEY);
             ringtonePref.setSummary(ringtoneName);
 
             ringtonePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        Intent notificationSettings = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                        Intent notificationSettings =
+                                new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
                         startActivity(notificationSettings);
                         return true;
                     }
@@ -86,7 +94,8 @@ public class SettingsActivity extends AppCompatActivity {
                     // go through all this just to get the name of the ringtone
                     SharedPreferences sharedPrefs = PreferenceManager
                             .getDefaultSharedPreferences(SettingsFragment.this.getContext());
-                    String ringtoneStr = sharedPrefs.getString("ringtone", "Silent");
+                    String ringtoneStr = sharedPrefs.getString(Preferences.RINGTONE_KEY,
+                            Preferences.DEFAULT_RINGTONE_VALUE);
 
                     // default uri to null, then set if not Silent
                     Uri ringtoneUri = Uri.parse(ringtoneStr);
@@ -95,8 +104,9 @@ public class SettingsActivity extends AppCompatActivity {
                     ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
                             RingtoneManager.TYPE_NOTIFICATION);
 
-                    if(!ringtoneUri.toString().equals("Silent")) {
-                        ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, ringtoneUri);
+                    if(!ringtoneUri.toString().equals(Preferences.DEFAULT_RINGTONE_VALUE)) {
+                        ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
+                                ringtoneUri);
                     }
 
                     startActivityForResult(ringtonePicker, RingtoneManager.TYPE_NOTIFICATION);
@@ -116,19 +126,20 @@ public class SettingsActivity extends AppCompatActivity {
                     getDefaultSharedPreferences(this.getContext());
             
             // set default to Silent
-            String ringtoneUriStr = "Silent";
-            String ringtoneName = "Silent";
+            String ringtoneUriStr = Preferences.DEFAULT_RINGTONE_VALUE;
+            String ringtoneName = Preferences.DEFAULT_RINGTONE_VALUE;
 
-            if(ringtoneUri != null && !ringtoneUri.toString().equals("Silent")) {
+            if(ringtoneUri != null
+                    && !ringtoneUri.toString().equals(Preferences.DEFAULT_RINGTONE_VALUE)) {
                 ringtoneUriStr = ringtoneUri.toString();
                 ringtoneName = Preferences.getRingtoneName(this.getContext(), ringtoneUri);
             }
 
             // store the uri into the ringtone preference
-            sharedPrefs.edit().putString("ringtone", ringtoneUriStr).apply();
+            sharedPrefs.edit().putString(Preferences.RINGTONE_KEY, ringtoneUriStr).apply();
 
             // set the summary of the pref to the ringtone name
-            findPreference("ringtone").setSummary(ringtoneName);
+            findPreference(Preferences.RINGTONE_KEY).setSummary(ringtoneName);
         }
     }
 }

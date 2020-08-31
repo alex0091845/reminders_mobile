@@ -1,7 +1,7 @@
 package org.chowmein.reminders.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import org.chowmein.reminders.managers.DatesManager;
+
 import java.util.Date;
 
 /**
@@ -29,9 +29,7 @@ public class Event {
         this.date = date;
         this.desc = desc;
         this.dbr = dbr;
-
-        DateFormat yearFormat = new SimpleDateFormat("yyyy");
-        this.year = yearFormat.format(date);
+        this.year = DatesManager.formatDate(date, DatesManager.YEAR_PTRN);
     }
 
     /**
