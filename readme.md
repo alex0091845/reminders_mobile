@@ -19,6 +19,7 @@ Reminders provides basic features such as:
 ![Delete](readme/reminders_delete_resized.png "Selecting events to delete")
 ![Edit](readme/reminders_edit_resized.png "The edit screen")
 ![Settings](readme/reminders_settings_resized.png "The settings screen")
+![Empty](readme/reminders_empty_resized.png "No redminders!")
 
 ## What do you mean by x days before?
 On each event, you'll see "x days before," meaning that notifications will pop up starting from x days before the event. For example, for the event "some other small event," 2 days before 2/5 is 2/3, so Reminders will remind you on 2/3, 2/4, and then on 2/5.
