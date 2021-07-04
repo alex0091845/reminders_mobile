@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
@@ -26,7 +27,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -192,6 +192,8 @@ public class HomeActivity extends AppCompatActivity {
                     tvHomeYear.setVisibility(View.GONE);
                 }
 
+                updateEventStyles();
+
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
@@ -302,18 +304,20 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
         JsonHelper.serialize(
                 eventSortedList,
                 this.saveFile);
     }
 
     /**
-     * A callback method triggered when this activity are no longer visible to the user. Overridden
+     * A callback method triggered when this activity is no longer visible to the user. Overridden
      * to save.
      */
     @Override
     protected void onStop() {
         super.onStop();
+
         JsonHelper.serialize(eventSortedList, this.saveFile);
     }
 
@@ -326,16 +330,38 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // if preferences have changed, then
+        updateStylesOnPrefsChanged();
+    }
+
+    /**
+     * Updates all event styles in RecyclerView only when preferences have been changed.
+     */
+    private void updateStylesOnPrefsChanged() {
         if (Preferences.prefsChanged) {
-            // reset it so we don't detect it again
             Preferences.prefsChanged = false;
 
-            // notify the user that to re-open the app to see the changes
-            Toast.makeText(this,
-                    "Please close and re-open the app to see the changes.",
-                    Toast.LENGTH_LONG).show();
+            // update font size in PreferencesHelper
+            Preferences.setFontSize(PreferenceManager.getDefaultSharedPreferences(this).getInt(Preferences.FONT_SIZE_KEY, 25));
+
+            updateEventStyles();
         }
+    }
+
+    /**
+     * Updates all event styles in RecyclerView.
+     */
+    private void updateEventStyles() {
+        // set font size for each event in RecyclerView
+        SortedList<Event> eventList = adapter.getEventList();
+        for(int i = 0; i < eventList.size(); i++) {
+            EventAdapter.EventViewHolder holder = (EventAdapter.EventViewHolder) rvReminders.findViewHolderForAdapterPosition(i);
+            if(holder == null) continue;
+            Event event = eventList.get(i);
+            adapter.setStyle(holder, event, this);
+        }
+
+        // sets font size in general (tvHomeYear, etc)
+        UIFormatter.format(this, UIFormatter.HOME);
     }
 
     /**

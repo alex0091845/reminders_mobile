@@ -30,7 +30,7 @@ public class UIFormatter {
 
     private final static int LARGE_OFFSET = 2;
     public final static int MEDIUM_OFFSET = 4;
-    public final static int SMALL_OFFSET = 8;
+    public final static int SMALL_OFFSET = 6;
     private final static int SIDE_MARGINS = 20;
     private final static int LEFT_MARGIN = 10;
 
@@ -57,30 +57,33 @@ public class UIFormatter {
     private static void formatAddEdit(Activity activity) {
         TextView tvDate = activity.findViewById(R.id.tv_date);
         setMarginAndWidthAddEdit(tvDate);
-        tvDate.setTextSize(Preferences.fontSize - LARGE_OFFSET);
+        tvDate.setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
 
         Button btnDate = activity.findViewById(R.id.btn_date);
         setMarginAndWidthAddEdit(btnDate);
-        btnDate.setTextSize(Preferences.fontSize - MEDIUM_OFFSET);
+        btnDate.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
 
         TextView tvDesc = activity.findViewById(R.id.tv_desc);
         setMarginAndWidthAddEdit(tvDesc);
-        tvDesc.setTextSize(Preferences.fontSize - LARGE_OFFSET);
+        tvDesc.setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
 
         EditText edtDesc = activity.findViewById(R.id.edt_desc);
         setMarginAndWidthAddEdit(edtDesc);
-        edtDesc.setTextSize(Preferences.fontSize - MEDIUM_OFFSET);
+        edtDesc.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
 
         TextView tvDbr = activity.findViewById(R.id.tv_dbr);
         setMarginAndWidthAddEdit(tvDbr);
-        tvDbr.setTextSize(Preferences.fontSize - LARGE_OFFSET);
+        tvDbr.setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
 
         EditText edtDbr = activity.findViewById(R.id.edt_dbr);
         setMarginAndWidthAddEdit(edtDbr);
-        edtDbr.setTextSize(Preferences.fontSize - MEDIUM_OFFSET);
+        edtDbr.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
 
         Button btnSubmit = activity.findViewById(R.id.btn_submit);
-        btnSubmit.setTextSize(Preferences.fontSize - MEDIUM_OFFSET);
+        btnSubmit.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
+
+        Button btnCancel = activity.findViewById(R.id.btn_cancel);
+        btnCancel.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
     }
 
     /**
@@ -100,6 +103,6 @@ public class UIFormatter {
     private static void formatHome(Activity activity) {
         HomeActivity homeActivity = (HomeActivity) activity;
         TextView tvHomeYear = homeActivity.findViewById(R.id.tv_home_year);
-        tvHomeYear.setTextSize(Preferences.fontSize - UIFormatter.MEDIUM_OFFSET);
+        tvHomeYear.setTextSize(Preferences.getFontSize() - UIFormatter.MEDIUM_OFFSET);
     }
 }

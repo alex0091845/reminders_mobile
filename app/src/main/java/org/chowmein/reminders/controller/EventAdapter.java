@@ -106,7 +106,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     /**
      * The inner class (ViewHolder) of the adapter.
      */
-    class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+    public class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener{
         Event event;
         TextView tv_desc;
@@ -206,7 +206,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      * @param event the Event
      * @param context the context
      */
-    private void setStyle(EventViewHolder holder, Event event, Context context) {
+    public void setStyle(EventViewHolder holder, Event event, Context context) {
         // if it's the first event in its year, make its ViewHolder's year TextView visible
         // and set its year correspondingly
         if(event.isYearTop()) {
@@ -255,10 +255,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      * @param holder the EventViewHolder
      */
     private void setTextViewSizes(EventViewHolder holder) {
-        holder.tv_desc.setTextSize(Preferences.fontSize);
-        holder.tv_date.setTextSize(Preferences.fontSize);
-        holder.tv_dbr.setTextSize(Preferences.fontSize - UIFormatter.SMALL_OFFSET);
-        holder.tv_year.setTextSize(Preferences.fontSize - UIFormatter.MEDIUM_OFFSET);
+        holder.tv_desc.setTextSize(Preferences.getFontSize());
+        holder.tv_date.setTextSize(Preferences.getFontSize());
+        holder.tv_dbr.setTextSize(Preferences.getFontSize() - UIFormatter.SMALL_OFFSET);
+        holder.tv_year.setTextSize(Preferences.getFontSize() - UIFormatter.MEDIUM_OFFSET);
     }
 
     @Override
@@ -268,7 +268,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         // sets the easy data textviews
         holder.tv_desc.setText(event.getDesc());
-        holder.tv_dbr.setText(event.getDbr() + " days before");
+        holder.tv_dbr.setText("Remind from " +
+                DatesManager.getDateStringFromDifference(
+                        event.getDate().getTime(),
+                        event.getDbr(),
+                        DatesManager.MONTH_DAY_PTRN
+                )
+        );
 
         // sets the date textview
         String dateStr = DatesManager.formatDate(event.getDate(), DatesManager.MONTH_DAY_PTRN);

@@ -136,15 +136,33 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/btn_submit"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:background="@drawable/ripple_button"
-        android:text="Add"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/ripple_gray"
+            android:text="Cancel"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/ripple_button"
+            android:text="Add"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 
 </LinearLayout>

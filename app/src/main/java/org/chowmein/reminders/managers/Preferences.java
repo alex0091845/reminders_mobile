@@ -14,7 +14,7 @@ import androidx.preference.PreferenceManager;
  * classes to access globally. The method loadPreferences(Context) must be called first.
  */
 public class Preferences {
-    private static final String FONT_SIZE_KEY = "fontSize";
+    public static final String FONT_SIZE_KEY = "fontSize";
     public static final String RINGTONE_KEY = "ringtone";
     public static final String DEFAULT_RINGTONE_VALUE = "Silent";
     private static final int DEFAULT_FONT_SIZE = 22;
@@ -24,7 +24,7 @@ public class Preferences {
     * class, SettingsFragment. */
     public static boolean prefsChanged;
 
-    public static int fontSize;
+    private static int fontSize;
     static Uri ringtoneUri;
 
     /**
@@ -41,7 +41,7 @@ public class Preferences {
     public static void loadPreferences(Context context) {
         SharedPreferences shrdprefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        Preferences.fontSize = shrdprefs.getInt(FONT_SIZE_KEY, DEFAULT_FONT_SIZE);
+        Preferences.setFontSize(shrdprefs.getInt(FONT_SIZE_KEY, DEFAULT_FONT_SIZE));
         Preferences.ringtoneUri = Uri.parse(shrdprefs.getString(RINGTONE_KEY,
                 DEFAULT_RINGTONE_VALUE));
     }
@@ -57,5 +57,19 @@ public class Preferences {
         return ringtone.getTitle(context);
     }
 
+    /**
+     * Getter for fontSize
+     * @return static fontSize
+     */
+    public static int getFontSize() {
+        return fontSize;
+    }
 
+    /**
+     * Setter for fontSize
+     * @param fontSize input fontSize
+     */
+    public static void setFontSize(int fontSize) {
+        Preferences.fontSize = fontSize;
+    }
 }

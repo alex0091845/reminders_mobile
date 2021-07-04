@@ -6,13 +6,16 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="General" app:iconSpaceReserved="false">
+    <PreferenceCategory
+        app:title="General"
+        app:iconSpaceReserved="false"
+        app:layout="">
 
         <SeekBarPreference
             app:key="fontSize"
             app:title="Font size"
             app:useSimpleSummaryProvider="true"
-            app:defaultValue="70"
+            app:defaultValue="22"
             app:showSeekBarValue="true"
             app:seekBarIncrement="1"
             app:min="14"

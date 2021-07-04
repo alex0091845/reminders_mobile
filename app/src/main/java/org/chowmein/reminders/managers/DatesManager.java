@@ -10,7 +10,7 @@ import java.util.Date;
  * A helper class to operate on dates.
  */
 public class DatesManager {
-    public static final long TIME_IN_MS = 86400000L;
+    public static final long DAY_IN_MS = 86400000L;
     public static final String DATE_PTRN = "M/d/yyyy";
     public static final String MONTH_DAY_PTRN = "M/d";
     public static final String MONTH_PTRN = "M";
@@ -20,7 +20,7 @@ public class DatesManager {
     public static final int ROUND_UP = 0;
     public static final int ROUND_DOWN = 1;
 
-    // encapsulate default constructor
+    /** Encapsulate default constructor */
     private DatesManager() {}
 
     /**
@@ -64,9 +64,9 @@ public class DatesManager {
      */
     static long roundToDay(long time, int mode) {
         if(mode == ROUND_DOWN) {
-            return time - (time % TIME_IN_MS);
+            return time - (time % DAY_IN_MS);
         } else if (mode == ROUND_UP) {
-            long result = time + (TIME_IN_MS - (time % TIME_IN_MS));
+            long result = time + (DAY_IN_MS - (time % DAY_IN_MS));
             return result;
         }
         return -1;
@@ -92,5 +92,18 @@ public class DatesManager {
     public static Date parseDate(String date, String pattern) throws ParseException {
         DateFormat format = new SimpleDateFormat(pattern);
         return format.parse(date);
+    }
+
+    /**
+     * Returns a formatted date string given a date, how many days to subtract from it,
+     * and formats it into the pattern
+     * @param time the given date
+     * @param days days to subtract
+     * @param pattern pattern format
+     * @return the resulting formatted date string
+     */
+    public static String getDateStringFromDifference(long time, int days, String pattern) {
+        long offset = (long)(days * DAY_IN_MS);
+        return formatDate(new Date(time - offset), pattern);
     }
 }

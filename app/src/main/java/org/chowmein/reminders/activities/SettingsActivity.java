@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -39,10 +41,14 @@ public class SettingsActivity extends AppCompatActivity {
         // if any prefs have changed, set prefsChanged to true
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(
-                (preference, newValue) -> Preferences.prefsChanged = true
+                // TODO: considering to save a list of what changed
+                (preference, key) -> Preferences.prefsChanged = true
         );
 
+
         setContentView(R.layout.settings_activity);
+        initViews();
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.settings, new SettingsFragment())
@@ -51,6 +57,15 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void initViews() {
+        Button btnBack = findViewById(R.id.btn_back_settings);
+        btnBack.setOnClickListener(e -> onBackButtonPressed());
+    }
+
+    private void onBackButtonPressed() {
+        finish();
     }
 
     /**

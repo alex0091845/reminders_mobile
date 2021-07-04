@@ -77,6 +77,9 @@ public class EventFormActivity extends AppCompatActivity {
         Button btn_submit = findViewById(R.id.btn_submit);
         btn_submit.setOnClickListener(e -> onSubmitButtonClicked());
 
+        Button btn_cancel = findViewById(R.id.btn_cancel);
+        btn_cancel.setOnClickListener(e -> onCancelButtonClicked());
+
         // init other instance vars
         tb_title = findViewById(R.id.tb_title_event_form);
         btn_date = findViewById(R.id.btn_date);
@@ -102,6 +105,10 @@ public class EventFormActivity extends AppCompatActivity {
         btn_date.setOnClickListener(e -> onDateButtonClicked());
 
         UIFormatter.format(this, UIFormatter.ADDEDIT);
+    }
+
+    private void onCancelButtonClicked() {
+        finish();
     }
 
     /**
@@ -134,7 +141,7 @@ public class EventFormActivity extends AppCompatActivity {
         String dbrStr = ((TextView)findViewById(R.id.edt_dbr)).getText().toString();
 
         if(!validateFields(desc, dbrStr)) return;
-        if(duplicate(dateStr, desc, dbrStr)) return;
+        if(requestCode == HomeActivity.ADD_REQUEST_CODE && duplicate(dateStr, desc, dbrStr)) return;
 
         int dbr = Integer.parseInt(dbrStr);
 
