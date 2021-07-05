@@ -71,7 +71,7 @@
             android:layout_marginBottom="15dp"
             android:clickable="false"
             android:longClickable="false"
-            android:text="3 days before"
+            android:text="Remind from 6/26"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
