@@ -106,4 +106,8 @@ public class DatesManager {
         long offset = (long)(days * DAY_IN_MS);
         return formatDate(new Date(time - offset), pattern);
     }
+
+    public static String getCurrYearString() {
+        return new SimpleDateFormat(YEAR_PTRN).format(new Date());
+    }
 }

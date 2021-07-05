@@ -6,8 +6,6 @@ package org.chowmein.reminders.activities;
  * https://stackoverflow.com/questions/7671637/how-to-set-ringtone-with-ringtonemanager-action-ringtone-picker
  */
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -15,30 +13,23 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import org.chowmein.reminders.managers.DatesManager;
 import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.managers.UIFormatter;
+
+import static org.chowmein.reminders.managers.DatesManager.getCurrYearString;
 
 /**
  * The Activity for when the user needs to adjust Settings.
@@ -59,6 +50,11 @@ public class SettingsActivity
 
             View eventView = findViewById(R.id.list_item);
             UIFormatter.formatEventItem(eventView, Preferences.getFontSize());
+
+            // set tv_event_year
+            TextView tv_event_year = eventView.findViewById(R.id.tv_event_year);
+            tv_event_year.setVisibility(View.VISIBLE);
+            tv_event_year.setText(DatesManager.getCurrYearString());
 
             SharedPreferences sharedPrefs = PreferenceManager
                     .getDefaultSharedPreferences(this);

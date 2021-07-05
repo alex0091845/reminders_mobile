@@ -109,7 +109,6 @@ public class UIFormatter {
     }
 
     public static void formatEventItem(View eventView, int prefFontSize) {
-        Log.d("UIFormatter", "UI formatter: inside UI Formatter");
         TextView tv_desc = eventView.findViewById(R.id.tv_event_desc);
         tv_desc.setTextSize(prefFontSize);
 
