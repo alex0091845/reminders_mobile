@@ -10,14 +10,13 @@ package org.chowmein.reminders.managers;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.preference.PreferenceViewHolder;
 
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.activities.HomeActivity;
@@ -29,10 +28,12 @@ public class UIFormatter {
 
     public final static int HOME = 0;
     public final static int ADDEDIT = 1;
+    public final static int SETTINGS = 2;
 
-    private final static int LARGE_OFFSET = 2;
-    public final static int MEDIUM_OFFSET = 4;
-    public final static int SMALL_OFFSET = 6;
+    private final static int LARGE_OFFSET = 2; // (20sp)
+    public final static int MEDIUM_OFFSET = 4; // (18sp)
+    public final static int SMALL_OFFSET = 6;  // (16sp)
+    public final static int SMOL_OFFSET = 8;   // (14sp)
     private final static int SIDE_MARGINS = 20;
     private final static int LEFT_MARGIN = 10;
 
@@ -48,8 +49,53 @@ public class UIFormatter {
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         width = dm.widthPixels;
 
-        if(activityId == HOME) formatHome(activity);
-        else if(activityId == ADDEDIT) formatAddEdit(activity);
+        switch (activityId) {
+            case HOME:
+                formatHome(activity);
+                break;
+            case ADDEDIT:
+                formatAddEdit(activity);
+                break;
+            case SETTINGS:
+                formatSettings(activity);
+                break;
+        }
+    }
+
+    public static void formatButton(View v) {
+        ((Button)v).setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
+    }
+
+    public static void formatTVSmol(View v) {
+        ((TextView)v).setTextSize(Preferences.getFontSize() - SMOL_OFFSET);
+    }
+
+
+    public static void formatTVSmall(View v) {
+        ((TextView)v).setTextSize(Preferences.getFontSize() - SMALL_OFFSET);
+    }
+
+    public static void formatTVMedium(View v) {
+        ((TextView)v).setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
+    }
+
+    public static void formatTVLarge(View v) {
+        ((TextView)v).setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
+    }
+
+    private static void formatSettings(Activity activity) {
+        formatButton(activity.findViewById(R.id.btn_cancel_settings));
+        formatButton(activity.findViewById(R.id.btn_apply_settings));
+    }
+
+    public static void formatGenPref(PreferenceViewHolder view) {
+        formatTVMedium(view.findViewById(android.R.id.title));
+        formatTVSmol(view.findViewById(android.R.id.summary));
+    }
+
+    public static void formatFontSizePref(PreferenceViewHolder view) {
+        formatGenPref(view);
+        formatTVSmall(view.findViewById(R.id.tv_preview));
     }
 
     /**

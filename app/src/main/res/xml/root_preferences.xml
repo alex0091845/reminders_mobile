@@ -2,16 +2,15 @@
 <!--Setting min/max value and step size of seekbar-->
 <!--https://github.com/consp1racy/android-support-preference/issues/72-->
 
-
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
+    <org.chowmein.reminders.components.GeneralPreferenceCategory
         app:title="General"
         app:iconSpaceReserved="false"
         app:layout="@layout/preferences_category_layout">
 
-        <SeekBarPreference
+        <org.chowmein.reminders.components.FontSizePreference
             app:key="fontSize"
             app:title="Font size"
             app:layout="@layout/preferences_slider_layout"
@@ -23,7 +22,7 @@
             android:max="25"
             app:iconSpaceReserved="false" />
 
-        <Preference
+        <org.chowmein.reminders.components.GeneralPreference
             app:title="Remind ringtone"
             app:key="ringtone"
             app:summary="@string/ringtone_name"
@@ -32,6 +31,6 @@
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
 
-    </PreferenceCategory>
+    </org.chowmein.reminders.components.GeneralPreferenceCategory>
 
 </PreferenceScreen>

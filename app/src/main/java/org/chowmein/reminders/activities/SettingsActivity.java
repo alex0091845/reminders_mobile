@@ -13,9 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -24,12 +22,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import org.chowmein.reminders.managers.DatesManager;
-import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.R;
+import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.managers.UIFormatter;
-
-import static org.chowmein.reminders.managers.DatesManager.getCurrYearString;
 
 /**
  * The Activity for when the user needs to adjust Settings.
@@ -37,45 +32,8 @@ import static org.chowmein.reminders.managers.DatesManager.getCurrYearString;
 public class SettingsActivity
         extends AppCompatActivity {
 
-    private boolean windowLoaded;
     private int initFontSize;
     private String initRingtoneName;
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        if(!this.windowLoaded) {
-            this.windowLoaded = true;
-
-            View eventView = findViewById(R.id.list_item);
-            UIFormatter.formatEventItem(eventView, Preferences.getFontSize());
-
-            // set tv_event_year
-            TextView tv_event_year = eventView.findViewById(R.id.tv_event_year);
-            tv_event_year.setVisibility(View.VISIBLE);
-            tv_event_year.setText(DatesManager.getCurrYearString());
-
-            SharedPreferences sharedPrefs = PreferenceManager
-                    .getDefaultSharedPreferences(this);
-            sharedPrefs.registerOnSharedPreferenceChangeListener(
-                    // TODO: considering to save a list of what changed
-                    (preference, key) -> {
-                        // if any prefs have changed, set prefsChanged to true
-                        Preferences.prefsChanged = true;
-
-                        // if the font size changed, update list item preview
-                        if(key.equals(Preferences.FONT_SIZE_KEY)) {
-                            UIFormatter.formatEventItem(
-                                    eventView,
-                                    preference.getInt(key, Preferences.getFontSize())
-                            );
-                        }
-
-                    }
-            );
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +89,9 @@ public class SettingsActivity
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+            // format the settings activity in general
+            UIFormatter.format(getActivity(), UIFormatter.SETTINGS);
 
             // go through all this just to get the name of the ringtone
             SharedPreferences sharedPrefs = PreferenceManager
