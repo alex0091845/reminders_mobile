@@ -88,6 +88,7 @@ public class SettingsActivity
         // indicated that, for now, preferences have not been changed
         Preferences.prefsChanged = false;
         this.initFontSize = Preferences.getFontSize();
+        this.initRingtoneName = Preferences.getCurrentRingtoneName(this);
 
         setContentView(R.layout.settings_activity);
         initViews();

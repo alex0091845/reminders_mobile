@@ -57,6 +57,11 @@ public class Preferences {
         return ringtone.getTitle(context);
     }
 
+    public static String getCurrentRingtoneName(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(RINGTONE_KEY, DEFAULT_RINGTONE_VALUE);
+    }
+
     /**
      * Getter for fontSize
      * @return static fontSize
