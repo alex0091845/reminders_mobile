@@ -8,15 +8,15 @@
 
     <PreferenceCategory
         app:title="General"
-        app:iconSpaceReserved="false"
-        app:layout="">
+        app:iconSpaceReserved="false">
 
         <SeekBarPreference
             app:key="fontSize"
             app:title="Font size"
+            app:layout="@layout/preferences_slider_layout"
+            app:selectable="false"
             app:useSimpleSummaryProvider="true"
             app:defaultValue="22"
-            app:showSeekBarValue="true"
             app:seekBarIncrement="1"
             app:min="14"
             android:max="25"
@@ -31,22 +31,5 @@
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
-
-<!--    <PreferenceCategory app:title="@string/sync_header" app:iconSpaceReserved="false">-->
-
-<!--        <SwitchPreferenceCompat-->
-<!--            app:key="sync"-->
-<!--            app:title="@string/sync_title"-->
-<!--            app:iconSpaceReserved="false" />-->
-
-<!--        <SwitchPreferenceCompat-->
-<!--            app:dependency="sync"-->
-<!--            app:key="attachment"-->
-<!--            app:summaryOff="@string/attachment_summary_off"-->
-<!--            app:summaryOn="@string/attachment_summary_on"-->
-<!--            app:title="@string/attachment_title"-->
-<!--            app:iconSpaceReserved="false" />-->
-
-<!--    </PreferenceCategory>-->
 
 </PreferenceScreen>

@@ -15,6 +15,7 @@ package org.chowmein.reminders.controller;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +115,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         TextView tv_dbr;
         TextView tv_year;
         ConstraintLayout cl_list_item;
+        View eventView;
 
         /**
          * Constructor that creates from a
@@ -121,11 +123,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
          */
         EventViewHolder(View eventView) {
             super(eventView);
-            tv_desc = eventView.findViewById(R.id.tv_event_desc);
-            tv_date = eventView.findViewById(R.id.tv_event_date);
-            tv_dbr = eventView.findViewById(R.id.tv_event_dbr);
-            tv_year = eventView.findViewById(R.id.tv_event_year);
-            cl_list_item = eventView.findViewById(R.id.cl_list_item);
+            this.eventView = eventView;
+            tv_desc = this.eventView.findViewById(R.id.tv_event_desc);
+            tv_date = this.eventView.findViewById(R.id.tv_event_date);
+            tv_dbr = this.eventView.findViewById(R.id.tv_event_dbr);
+            tv_year = this.eventView.findViewById(R.id.tv_event_year);
+            Log.d("event adapter", "eventView tv_desc is " + this.tv_desc);
+            cl_list_item = this.eventView.findViewById(R.id.cl_list_item);
             eventView.setOnClickListener(this);
             eventView.setOnLongClickListener(this);
         }
@@ -255,10 +259,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      * @param holder the EventViewHolder
      */
     private void setTextViewSizes(EventViewHolder holder) {
-        holder.tv_desc.setTextSize(Preferences.getFontSize());
-        holder.tv_date.setTextSize(Preferences.getFontSize());
-        holder.tv_dbr.setTextSize(Preferences.getFontSize() - UIFormatter.SMALL_OFFSET);
-        holder.tv_year.setTextSize(Preferences.getFontSize() - UIFormatter.MEDIUM_OFFSET);
+        UIFormatter.formatEventItem(holder.eventView, Preferences.getFontSize());
     }
 
     @Override

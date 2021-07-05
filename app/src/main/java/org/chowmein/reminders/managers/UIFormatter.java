@@ -10,9 +10,11 @@ package org.chowmein.reminders.managers;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -104,5 +106,20 @@ public class UIFormatter {
         HomeActivity homeActivity = (HomeActivity) activity;
         TextView tvHomeYear = homeActivity.findViewById(R.id.tv_home_year);
         tvHomeYear.setTextSize(Preferences.getFontSize() - UIFormatter.MEDIUM_OFFSET);
+    }
+
+    public static void formatEventItem(View eventView, int prefFontSize) {
+        Log.d("UIFormatter", "UI formatter: inside UI Formatter");
+        TextView tv_desc = eventView.findViewById(R.id.tv_event_desc);
+        tv_desc.setTextSize(prefFontSize);
+
+        TextView tv_date = eventView.findViewById(R.id.tv_event_date);
+        tv_date.setTextSize(prefFontSize);
+
+        TextView tv_dbr = eventView.findViewById(R.id.tv_event_dbr);
+        tv_dbr.setTextSize(prefFontSize - UIFormatter.SMALL_OFFSET);
+
+        TextView tv_year = eventView.findViewById(R.id.tv_event_year);
+        tv_year.setTextSize(prefFontSize - UIFormatter.MEDIUM_OFFSET);
     }
 }

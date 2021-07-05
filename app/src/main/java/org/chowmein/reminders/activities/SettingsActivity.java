@@ -6,6 +6,8 @@ package org.chowmein.reminders.activities;
  * https://stackoverflow.com/questions/7671637/how-to-set-ringtone-with-ringtonemanager-action-ringtone-picker
  */
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -14,22 +16,68 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.R;
+import org.chowmein.reminders.managers.UIFormatter;
 
 /**
  * The Activity for when the user needs to adjust Settings.
  */
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity
+        extends AppCompatActivity {
+
+    private boolean windowLoaded;
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if(!this.windowLoaded) {
+            this.windowLoaded = true;
+
+            View eventView = findViewById(R.id.list_item);
+            UIFormatter.formatEventItem(eventView, Preferences.getFontSize());
+
+            SharedPreferences sharedPrefs = PreferenceManager
+                    .getDefaultSharedPreferences(this);
+            sharedPrefs.registerOnSharedPreferenceChangeListener(
+                    // TODO: considering to save a list of what changed
+                    (preference, key) -> {
+                        // if any prefs have changed, set prefsChanged to true
+                        Preferences.prefsChanged = true;
+
+                        // if the font size changed, update list item preview
+                        if(key.equals(Preferences.FONT_SIZE_KEY)) {
+                            UIFormatter.formatEventItem(
+                                    eventView,
+                                    preference.getInt(key, Preferences.getFontSize())
+                            );
+                        }
+
+                    }
+            );
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +86,6 @@ public class SettingsActivity extends AppCompatActivity {
         // indicated that, for now, preferences have not been changed
         Preferences.prefsChanged = false;
 
-        // if any prefs have changed, set prefsChanged to true
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.registerOnSharedPreferenceChangeListener(
-                // TODO: considering to save a list of what changed
-                (preference, key) -> Preferences.prefsChanged = true
-        );
-
-
         setContentView(R.layout.settings_activity);
         initViews();
 
@@ -53,6 +93,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.settings, new SettingsFragment())
                 .commit();
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -65,6 +106,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void onBackButtonPressed() {
+        Preferences.prefsChanged = false;
         finish();
     }
 
@@ -72,7 +114,9 @@ public class SettingsActivity extends AppCompatActivity {
      * The inner class (generated) fragment. It loads all the initial values of the settings, and
      * implements how the user will interact with each setting.
      */
-    public static class SettingsFragment extends PreferenceFragmentCompat{
+    public static class SettingsFragment
+            extends PreferenceFragmentCompat{
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -156,5 +200,6 @@ public class SettingsActivity extends AppCompatActivity {
             // set the summary of the pref to the ringtone name
             findPreference(Preferences.RINGTONE_KEY).setSummary(ringtoneName);
         }
+
     }
 }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--References-->
+<!--https://stackoverflow.com/questions/4132362/import-xml-into-another-xml-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dp" >
+
+    <TextView
+        android:id="@android:id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/darkGray"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@android:id/summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginHorizontal="10dp" />
+
+    <TextView
+        android:id="@+id/seekbar_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginHorizontal="10dp" />
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="10dp" />
+
+    <TextView
+        android:id="@+id/tv_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Preview"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="13dp"
+        android:textSize="14sp"
+        android:layout_marginHorizontal="10dp" />
+
+    <include
+        layout="@layout/event_list_view"
+        android:id="@+id/list_item" />
+
+</LinearLayout>
