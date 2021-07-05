@@ -9,12 +9,32 @@
         android:layout_height="match_parent"
         android:layout_weight="0.8"/>
 
-    <Button
-        android:id="@+id/btn_back_settings"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Back"
-        android:textSize="18sp"
-        android:background="@drawable/ripple_gray"
-        android:layout_margin="15dp"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_cancel_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textSize="18sp"
+            android:background="@drawable/ripple_gray"
+            android:layout_margin="15dp"/>
+
+        <Button
+            android:id="@+id/btn_apply_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Apply"
+            android:textSize="18sp"
+            android:background="@drawable/ripple_button"
+            android:textColor="@color/white"
+            android:layout_marginRight="15dp"
+            android:layout_marginVertical="15dp"/>
+
+    </LinearLayout>
 </LinearLayout>

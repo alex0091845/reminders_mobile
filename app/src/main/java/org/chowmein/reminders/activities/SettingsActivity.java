@@ -47,6 +47,8 @@ public class SettingsActivity
         extends AppCompatActivity {
 
     private boolean windowLoaded;
+    private int initFontSize;
+    private String initRingtoneName;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -85,6 +87,7 @@ public class SettingsActivity
 
         // indicated that, for now, preferences have not been changed
         Preferences.prefsChanged = false;
+        this.initFontSize = Preferences.getFontSize();
 
         setContentView(R.layout.settings_activity);
         initViews();
@@ -101,12 +104,23 @@ public class SettingsActivity
     }
 
     private void initViews() {
-        Button btnBack = findViewById(R.id.btn_back_settings);
-        btnBack.setOnClickListener(e -> onBackButtonPressed());
+        Button btnCancel = findViewById(R.id.btn_cancel_settings);
+        btnCancel.setOnClickListener(e -> onBackButtonPressed());
+
+        Button btnApply = findViewById(R.id.btn_apply_settings);
+        btnApply.setOnClickListener(e -> onApplyButtonPressed());
     }
 
     private void onBackButtonPressed() {
         Preferences.prefsChanged = false;
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putInt(Preferences.FONT_SIZE_KEY, initFontSize)
+                .putString(Preferences.RINGTONE_KEY, initRingtoneName)
+                .apply();
+        finish();
+    }
+
+    private void onApplyButtonPressed() {
         finish();
     }
 
