@@ -11,6 +11,7 @@ package org.chowmein.reminders.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
@@ -18,7 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -98,6 +102,10 @@ public class HomeActivity extends AppCompatActivity {
         // includes setting font size (formatting the home activity)
         initViews();
 
+        // init notification channel
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            initNotificationChannel();
+
         // prevents from re-initializing because of configuration changes
         if(savedInstanceState == null) {
             Preferences.loadPreferences(this);
@@ -119,6 +127,15 @@ public class HomeActivity extends AppCompatActivity {
 
         // just ensures that the alarm is set
         EventManager.registerAlarmTomorrow(this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void initNotificationChannel() {
+        // sets up notification manager
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+
+        // sets up notification channel
+        EventManager.initNotificationChannel(notificationManager);
     }
 
     /**

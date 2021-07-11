@@ -43,7 +43,7 @@ import java.util.Date;
 public class EventManager {
     private final static int REGISTER_ALARM = 1;
     private final static double DAY_IN_MS = 86400000.0;
-    private final static String CID = "remind";  // channel id
+    public final static String CID = "remind";  // channel id
 
     public final static String REGISTER_ALARM_ACTION = "REGISTER_ALARM";
     private static final String NOTIFICATION_CHANNEL_NAME = "On boot";
@@ -81,16 +81,18 @@ public class EventManager {
      * Sets up notification channel (for supporting API > 26).
      * @param notificationManager the notification manager
      */
-    private static void initNotificationChannel(NotificationManager notificationManager) {
+    public static void initNotificationChannel(NotificationManager notificationManager) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CID, NOTIFICATION_CHANNEL_NAME,
                     importance);
             channel.setDescription(NOTIFICATION_CHANNEL_DESC);
+            channel.setName(NOTIFICATION_CHANNEL_NAME);
 
             // set notification sound
             AudioAttributes audAttr = new AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                     .build();
             channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
                     audAttr);

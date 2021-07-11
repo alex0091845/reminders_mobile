@@ -4,8 +4,14 @@ package org.chowmein.reminders.activities;
  * -----------------------------References
  * Get ringtone info:
  * https://stackoverflow.com/questions/7671637/how-to-set-ringtone-with-ringtonemanager-action-ringtone-picker
+ *
+ * Open notification channel settings:
+ * https://developer.android.com/training/notify-user/channels#UpdateChannel
  */
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -14,17 +20,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Button;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import org.chowmein.reminders.R;
+import org.chowmein.reminders.managers.EventManager;
 import org.chowmein.reminders.managers.Preferences;
+import org.chowmein.reminders.R;
 import org.chowmein.reminders.managers.UIFormatter;
+
 
 /**
  * The Activity for when the user needs to adjust Settings.
@@ -34,6 +44,7 @@ public class SettingsActivity
 
     private int initFontSize;
     private String initRingtoneName;
+    private static final int O_RINGTONE_REQ_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +113,13 @@ public class SettingsActivity
             // default uri to null, then set if not Silent
             Uri ringtoneUri = Uri.parse(ringtoneStr);
 
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ringtoneUri = getUriVersionOAndAbove();
+            }
+
             // default name to null, then set if not Silent
-            String ringtoneName = "Silent";
-            if(!ringtoneUri.toString().equals("Silent")) {
+            String ringtoneName = "None";
+            if(ringtoneUri == null || !ringtoneUri.toString().equals("None")) {
                 ringtoneName = Preferences.getRingtoneName(this.getContext(), ringtoneUri);
             }
 
@@ -117,8 +132,10 @@ public class SettingsActivity
                 public boolean onPreferenceClick(Preference preference) {
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         Intent notificationSettings =
-                                new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-                        startActivity(notificationSettings);
+                                new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                        notificationSettings.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
+                        notificationSettings.putExtra(Settings.EXTRA_CHANNEL_ID, EventManager.CID);
+                        startActivityForResult(notificationSettings, O_RINGTONE_REQ_CODE);
                         return true;
                     }
 
@@ -146,17 +163,35 @@ public class SettingsActivity
             });
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        private Uri getUriVersionOAndAbove() {
+            NotificationManager notificationManager = (NotificationManager) getActivity()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+
+            NotificationChannel nc = notificationManager.getNotificationChannel(EventManager.CID);
+            return nc.getSound();
+        }
+
         @Override
         public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
 
-            if(data == null) return;
+            if(data == null && requestCode != O_RINGTONE_REQ_CODE) return;
 
-            Uri ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            Uri ringtoneUri;
+
+            /* Android version above O */
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ringtoneUri = getUriVersionOAndAbove();
+            } else {
+                /* Android version below O */
+                ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            }
+
             SharedPreferences sharedPrefs = PreferenceManager.
                     getDefaultSharedPreferences(this.getContext());
             
-            // set default to Silent
+            // set default to None
             String ringtoneUriStr = Preferences.DEFAULT_RINGTONE_VALUE;
             String ringtoneName = Preferences.DEFAULT_RINGTONE_VALUE;
 

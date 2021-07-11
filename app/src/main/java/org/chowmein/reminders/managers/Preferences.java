@@ -16,7 +16,7 @@ import androidx.preference.PreferenceManager;
 public class Preferences {
     public static final String FONT_SIZE_KEY = "fontSize";
     public static final String RINGTONE_KEY = "ringtone";
-    public static final String DEFAULT_RINGTONE_VALUE = "Silent";
+    public static final String DEFAULT_RINGTONE_VALUE = "None";
     private static final int DEFAULT_FONT_SIZE = 22;
 
     /* indicating whether any prefs have changed. This will be set in the onCreate() callback
