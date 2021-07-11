@@ -16,6 +16,7 @@
             app:layout="@layout/preferences_slider_layout"
             app:selectable="false"
             app:useSimpleSummaryProvider="true"
+            app:allowDividerBelow="true"
             app:defaultValue="22"
             app:seekBarIncrement="1"
             app:min="14"
@@ -27,6 +28,7 @@
             app:key="ringtone"
             app:summary="@string/ringtone_name"
             android:layout="@layout/preferences_ringtone_layout"
+            app:allowDividerAbove="true"
             app:persistent="true"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
