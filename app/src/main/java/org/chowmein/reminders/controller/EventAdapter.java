@@ -15,7 +15,6 @@ package org.chowmein.reminders.controller;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
@@ -111,6 +109,35 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             View.OnLongClickListener{
         Event event;
         TextView tv_desc;
+
+        public Event getEvent() {
+            return event;
+        }
+
+        public TextView getTvDesc() {
+            return tv_desc;
+        }
+
+        public TextView getTvDate() {
+            return tv_date;
+        }
+
+        public TextView getTvDbr() {
+            return tv_dbr;
+        }
+
+        public TextView getTvYear() {
+            return tv_year;
+        }
+
+        public ConstraintLayout getClListItem() {
+            return cl_list_item;
+        }
+
+        public View getEventView() {
+            return eventView;
+        }
+
         TextView tv_date;
         TextView tv_dbr;
         TextView tv_year;
@@ -128,7 +155,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             tv_date = this.eventView.findViewById(R.id.tv_event_date);
             tv_dbr = this.eventView.findViewById(R.id.tv_event_dbr);
             tv_year = this.eventView.findViewById(R.id.tv_event_year);
-            Log.d("event adapter", "eventView tv_desc is " + this.tv_desc);
             cl_list_item = this.eventView.findViewById(R.id.cl_list_item);
             eventView.setOnClickListener(this);
             eventView.setOnLongClickListener(this);
@@ -224,34 +250,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         setTextViewSizes(holder);
 
-        // a ViewHolder being selected overrides all of its other colors/styles
-        if (event.isSelected()) {
-            holder.cl_list_item.setBackground(ContextCompat.getDrawable(context,
-                    R.drawable.item_bg_blue));
-            setTextViewColors(holder, ContextCompat.getColor(context, R.color.white));
-        }
-        // set style based on position (alternating colors)
-        else if (holder.getAdapterPosition() % 2 == 1) {
-            holder.cl_list_item.setBackground(ContextCompat.getDrawable(context,
-                    R.drawable.ripple_gray));
-            setTextViewColors(holder, ContextCompat.getColor(context, R.color.darkGray));
-        } else {
-            holder.cl_list_item.setBackground(ContextCompat.getDrawable(context,
-                    R.drawable.ripple_red));
-            setTextViewColors(holder, ContextCompat.getColor(context, R.color.white));
-        }
-    }
-
-    /**
-     * A helper method to specifically set the colors of the tv_desc, tv_date, and tv_dbr TextViews
-     * inside a ViewHolder.
-     * @param holder the EventViewHolder
-     * @param color the color to assign all TextViews
-     */
-    private void setTextViewColors(EventViewHolder holder, int color) {
-        holder.tv_desc.setTextColor(color);
-        holder.tv_date.setTextColor(color);
-        holder.tv_dbr.setTextColor(color);
+        UIFormatter.EventFormatter.styleEvent(context, event, holder, "Ocean");
     }
 
     /**

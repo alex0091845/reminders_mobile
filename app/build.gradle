@@ -8,8 +8,8 @@ android {
         applicationId "org.chowmein.reminders"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 2
-        versionName '1.1.11'
+        versionCode 4
+        versionName '1.1.12'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

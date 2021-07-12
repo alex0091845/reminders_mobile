@@ -4,10 +4,27 @@ package org.chowmein.reminders.activities;
  * ------------------------------------------References---------------------------------------------
  *  * ItemDecoration (setting each item's margins):
  *  https://medium.com/mobile-app-development-publication/right-way-of-setting-margin-on-recycler-views-cell-319da259b641
+ *
  *  * Settings/Preferences:
  *  https://stackoverflow.com/questions/39439039/how-to-add-overflow-menu-to-toolbar
  *  https://alvinalexander.com/android/android-tutorial-preferencescreen-preferenceactivity-preferencefragment/
+ *
+ *  * Themes:
+ *  https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically/39150319#39150319
  */
+
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,30 +36,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.chowmein.reminders.managers.DatesManager;
-import org.chowmein.reminders.managers.EventManager;
-import org.chowmein.reminders.model.Event;
+import org.chowmein.reminders.R;
 import org.chowmein.reminders.controller.EventAdapter;
 import org.chowmein.reminders.controller.EventItemDecoration;
+import org.chowmein.reminders.managers.DatesManager;
+import org.chowmein.reminders.managers.EventManager;
 import org.chowmein.reminders.managers.JsonHelper;
 import org.chowmein.reminders.managers.Preferences;
-import org.chowmein.reminders.R;
 import org.chowmein.reminders.managers.UIFormatter;
+import org.chowmein.reminders.model.Event;
 
 import java.io.File;
 import java.util.Date;
@@ -94,6 +98,7 @@ public class HomeActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Ocean);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -122,11 +127,17 @@ public class HomeActivity extends AppCompatActivity {
 
         // set up the views that require more detailed implementations
         setSupportActionBar(toolbar);
+        UIFormatter.colorHeader(this, toolbar, "Ocean");
         initRecyclerView();
         setTvHomeYear(savedInstanceState);
 
         // just ensures that the alarm is set
         EventManager.registerAlarmTomorrow(this);
+    }
+
+    @Override
+    public Resources.Theme getTheme() {
+        return super.getTheme();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

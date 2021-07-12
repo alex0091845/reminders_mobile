@@ -1,11 +1,22 @@
 <resources>
 
+    <!--References-->
+        <!--FAB Style-->
+            <!--https://stackoverflow.com/questions/36261421/how-to-change-android-button-text-color-globally-in-theme-->
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
+        <item name="buttonTint">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="Ocean" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/indigo</item>
+        <item name="colorPrimaryDark">@color/indigo</item>
+        <item name="colorAccent">@color/indigo</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 

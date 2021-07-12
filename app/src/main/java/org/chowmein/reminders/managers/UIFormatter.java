@@ -9,17 +9,23 @@ package org.chowmein.reminders.managers;
  */
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceViewHolder;
 
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.activities.HomeActivity;
+import org.chowmein.reminders.controller.EventAdapter;
+import org.chowmein.reminders.model.Event;
 
 /**
  * A helper class to format the UI components of Activities.
@@ -36,6 +42,15 @@ public class UIFormatter {
     public final static int SMOL_OFFSET = 8;   // (14sp)
     private final static int SIDE_MARGINS = 20;
     private final static int LEFT_MARGIN = 10;
+
+    // constants
+    static final String RED_VELVET = "Red Velvet";
+    static final String MANGO = "Mango";
+    static final String OCEAN = "Ocean";
+    static final String GRAPE = "Grape";
+    static final String FOREST = "Forest";
+    static final String SHERBET = "Sherbet";
+    static final String UNICORN = "Unicorn";
 
     private static int width;
 
@@ -152,6 +167,8 @@ public class UIFormatter {
         HomeActivity homeActivity = (HomeActivity) activity;
         TextView tvHomeYear = homeActivity.findViewById(R.id.tv_home_year);
         tvHomeYear.setTextSize(Preferences.getFontSize() - UIFormatter.MEDIUM_OFFSET);
+//        FloatingActionButton fabAdd = ((HomeActivity)activity).findViewById(R.id.btn_add);
+//        fabAdd.setBackgroundColor(activity.getResources().getColor(R.style.Ocean.colorPrimaryDark));
     }
 
     public static void formatEventItem(View eventView, int prefFontSize) {
@@ -166,5 +183,77 @@ public class UIFormatter {
 
         TextView tv_year = eventView.findViewById(R.id.tv_event_year);
         tv_year.setTextSize(prefFontSize - UIFormatter.MEDIUM_OFFSET);
+    }
+
+    public static void colorHeader(Context context, Toolbar toolbar, String theme) {
+        Resources res = context.getResources();
+        int color;
+
+        switch(theme) {
+            case OCEAN: color = res.getColor(R.color.indigo); break;
+            default: color = res.getColor(R.color.colorPrimaryDark); break;
+        }
+
+        toolbar.setBackgroundColor(color);
+    }
+
+    public static class EventFormatter {
+        String themeString;
+
+        /**
+         * A helper method to specifically set the colors of the tv_desc, tv_date, and tv_dbr TextViews
+         * inside a ViewHolder.
+         * @param holder the EventViewHolder
+         * @param color the color to assign all TextViews
+         */
+        private static void setTextViewColors(EventAdapter.EventViewHolder holder, int color) {
+            holder.getTvDesc().setTextColor(color);
+            holder.getTvDate().setTextColor(color);
+            holder.getTvDbr().setTextColor(color);
+        }
+
+        private static void styleEventDual(Context context, Event event,
+                                           EventAdapter.EventViewHolder holder,
+                                           int resId) {
+            // a ViewHolder being selected overrides all of its other colors/styles
+            if (event.isSelected()) {
+                holder.getClListItem().setBackground(ContextCompat.getDrawable(context,
+                        R.drawable.item_bg_blue));
+                setTextViewColors(holder, ContextCompat.getColor(context, R.color.white));
+            }
+            // set style based on position (alternating colors)
+            else if (holder.getAdapterPosition() % 2 == 1) {
+                holder.getClListItem().setBackground(ContextCompat.getDrawable(context,
+                        R.drawable.ripple_gray));
+                setTextViewColors(holder, ContextCompat.getColor(context, R.color.darkGray));
+            } else {
+                holder.getClListItem().setBackground(ContextCompat.getDrawable(context, resId));
+                setTextViewColors(holder, ContextCompat.getColor(context, R.color.white));
+            }
+        }
+
+        private static int getThemeDrawable(String themeString) {
+            switch(themeString) {
+                case OCEAN:
+                    return R.drawable.ripple_ocean;
+                default:
+                    return R.drawable.ripple_red;
+            }
+        }
+
+        public static void styleEvent(Context context, Event event,
+                                      EventAdapter.EventViewHolder holder,
+                                      String themeString) {
+            switch(themeString) {
+                case RED_VELVET:
+                case OCEAN:
+                case GRAPE:
+                case MANGO:
+                case FOREST:
+                    styleEventDual(context, event, holder, getThemeDrawable(themeString));
+            }
+        }
+
+
     }
 }
