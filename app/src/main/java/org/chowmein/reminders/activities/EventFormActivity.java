@@ -9,9 +9,6 @@ package org.chowmein.reminders.activities;
  *
  */
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -20,10 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.chowmein.reminders.managers.DatesManager;
-import org.chowmein.reminders.model.Event;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import org.chowmein.reminders.R;
+import org.chowmein.reminders.managers.DatesManager;
 import org.chowmein.reminders.managers.UIFormatter;
+import org.chowmein.reminders.model.Event;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -43,6 +43,7 @@ public class EventFormActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Ocean);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_form);
 
@@ -105,6 +106,7 @@ public class EventFormActivity extends AppCompatActivity {
         btn_date.setOnClickListener(e -> onDateButtonClicked());
 
         UIFormatter.format(this, UIFormatter.ADDEDIT);
+        UIFormatter.colorHeader(this, tb_title, "Ocean");
     }
 
     private void onCancelButtonClicked() {

@@ -144,6 +144,7 @@ public class UIFormatter {
 
         Button btnSubmit = activity.findViewById(R.id.btn_submit);
         btnSubmit.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
+        btnSubmit.setBackground(activity.getResources().getDrawable(R.drawable.ripple_ocean));
 
         Button btnCancel = activity.findViewById(R.id.btn_cancel);
         btnCancel.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
