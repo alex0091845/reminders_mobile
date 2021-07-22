@@ -2,6 +2,7 @@ package org.chowmein.reminders.components;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceViewHolder;
@@ -29,7 +30,9 @@ public class GeneralPreferenceCategory extends PreferenceCategory {
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
 
-        UIFormatter.formatTVMedium(holder.findViewById(android.R.id.title));
+        TextView tv_title = (TextView) holder.findViewById(android.R.id.title);
+        UIFormatter.formatTVMedium(tv_title);
+        UIFormatter.formatTextViewToTheme(tv_title, this.getContext());
     }
 
 

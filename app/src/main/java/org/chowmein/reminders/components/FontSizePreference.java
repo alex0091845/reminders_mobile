@@ -38,7 +38,7 @@ public class FontSizePreference extends SeekBarPreference {
         super.onBindViewHolder(view);
 
         View eventView = view.findViewById(R.id.list_item);
-        UIFormatter.formatEventItem(eventView, Preferences.getFontSize());
+        UIFormatter.formatEventItem(eventView, Preferences.getFontSize(), this.getContext());
         UIFormatter.formatFontSizePref(view);
 
         // set tv_event_year
@@ -58,7 +58,8 @@ public class FontSizePreference extends SeekBarPreference {
                     if(key.equals(Preferences.FONT_SIZE_KEY)) {
                         UIFormatter.formatEventItem(
                                 eventView,
-                                preference.getInt(key, Preferences.getFontSize())
+                                preference.getInt(key, Preferences.getFontSize()),
+                                this.getContext()
                         );
                     }
 

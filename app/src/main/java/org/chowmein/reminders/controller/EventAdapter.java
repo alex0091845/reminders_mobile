@@ -258,7 +258,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      * @param holder the EventViewHolder
      */
     private void setTextViewSizes(EventViewHolder holder) {
-        UIFormatter.formatEventItem(holder.eventView, Preferences.getFontSize());
+        UIFormatter.formatEventItem(holder.eventView, Preferences.getFontSize(), view.getContext());
     }
 
     @Override

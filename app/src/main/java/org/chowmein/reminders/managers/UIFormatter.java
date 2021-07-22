@@ -99,8 +99,11 @@ public class UIFormatter {
     }
 
     private static void formatSettings(Activity activity) {
-        formatButton(activity.findViewById(R.id.btn_cancel_settings));
-        formatButton(activity.findViewById(R.id.btn_apply_settings));
+        Button btnCancel = activity.findViewById(R.id.btn_cancel_settings);
+        Button btnApply = activity.findViewById(R.id.btn_apply_settings);
+        formatButton(btnCancel);
+        formatButton(btnApply);
+        btnApply.setBackground(activity.getResources().getDrawable(R.drawable.ripple_ocean));
     }
 
     public static void formatGenPref(PreferenceViewHolder view) {
@@ -111,6 +114,11 @@ public class UIFormatter {
     public static void formatFontSizePref(PreferenceViewHolder view) {
         formatGenPref(view);
         formatTVSmall(view.findViewById(R.id.tv_preview));
+    }
+
+    // TODO
+    public static void formatTextViewToTheme(TextView tv, Context context) {
+        tv.setTextColor(ContextCompat.getColor(context, R.color.indigo));
     }
 
     /**
@@ -172,7 +180,7 @@ public class UIFormatter {
 //        fabAdd.setBackgroundColor(activity.getResources().getColor(R.style.Ocean.colorPrimaryDark));
     }
 
-    public static void formatEventItem(View eventView, int prefFontSize) {
+    public static void formatEventItem(View eventView, int prefFontSize, Context context) {
         TextView tv_desc = eventView.findViewById(R.id.tv_event_desc);
         tv_desc.setTextSize(prefFontSize);
 
@@ -184,6 +192,10 @@ public class UIFormatter {
 
         TextView tv_year = eventView.findViewById(R.id.tv_event_year);
         tv_year.setTextSize(prefFontSize - UIFormatter.MEDIUM_OFFSET);
+
+        View list_view = eventView.findViewById(R.id.list_item);
+        ConstraintLayout cl_list_view = list_view.findViewById(R.id.cl_list_item);
+        cl_list_view.setBackground(ContextCompat.getDrawable(context, R.drawable.ripple_ocean));
     }
 
     public static void colorHeader(Context context, Toolbar toolbar, String theme) {
