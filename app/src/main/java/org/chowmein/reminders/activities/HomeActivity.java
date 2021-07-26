@@ -41,6 +41,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.controller.EventAdapter;
 import org.chowmein.reminders.controller.EventItemDecoration;
+import org.chowmein.reminders.helpers.ThemeHelper;
 import org.chowmein.reminders.managers.DatesManager;
 import org.chowmein.reminders.managers.EventManager;
 import org.chowmein.reminders.managers.JsonHelper;
@@ -98,7 +99,7 @@ public class HomeActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Ocean);
+        setTheme(ThemeHelper.getThemeStyle());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -127,7 +128,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // set up the views that require more detailed implementations
         setSupportActionBar(toolbar);
-        UIFormatter.colorHeader(this, toolbar, "Ocean");
+        UIFormatter.colorHeader(this, toolbar);
         initRecyclerView();
         setTvHomeYear(savedInstanceState);
 

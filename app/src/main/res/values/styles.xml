@@ -14,9 +14,9 @@
     </style>
 
     <style name="Ocean" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/indigo</item>
-        <item name="colorPrimaryDark">@color/indigo</item>
-        <item name="colorAccent">@color/indigo</item>
+        <item name="colorPrimary">@color/oceanPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/oceanPrimaryDark</item>
+        <item name="colorAccent">@color/oceanPrimaryDark</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 

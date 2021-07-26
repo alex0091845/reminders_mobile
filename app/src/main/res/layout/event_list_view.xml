@@ -25,7 +25,7 @@
         android:id="@+id/cl_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ripple_red">
+        android:background="@drawable/ripple_red_velvet">
 
         <TextView
             android:id="@+id/tv_event_desc"

@@ -30,6 +30,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import org.chowmein.reminders.R;
+import org.chowmein.reminders.helpers.ThemeHelper;
 import org.chowmein.reminders.managers.EventManager;
 import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.managers.UIFormatter;
@@ -47,7 +48,7 @@ public class SettingsActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Ocean);
+        setTheme(ThemeHelper.getThemeStyle());
         super.onCreate(savedInstanceState);
 
         // indicated that, for now, preferences have not been changed

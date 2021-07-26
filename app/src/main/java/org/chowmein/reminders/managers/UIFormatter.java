@@ -10,7 +10,7 @@ package org.chowmein.reminders.managers;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
+import android.content.res.ColorStateList;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
@@ -19,12 +19,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceViewHolder;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.activities.HomeActivity;
 import org.chowmein.reminders.controller.EventAdapter;
+import org.chowmein.reminders.helpers.ThemeHelper;
 import org.chowmein.reminders.model.Event;
 
 /**
@@ -42,15 +44,6 @@ public class UIFormatter {
     public final static int SMOL_OFFSET = 8;   // (14sp)
     private final static int SIDE_MARGINS = 20;
     private final static int LEFT_MARGIN = 10;
-
-    // constants
-    static final String RED_VELVET = "Red Velvet";
-    static final String MANGO = "Mango";
-    static final String OCEAN = "Ocean";
-    static final String GRAPE = "Grape";
-    static final String FOREST = "Forest";
-    static final String SHERBET = "Sherbet";
-    static final String UNICORN = "Unicorn";
 
     private static int width;
 
@@ -77,14 +70,16 @@ public class UIFormatter {
         }
     }
 
-    public static void formatButton(View v) {
-        ((Button)v).setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
+    public static void formatButton(Button b, boolean positive, Context context) {
+        b.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
+
+        if(positive) b.setBackground(ThemeHelper.getRippleDrawableButtonPositive(context));
+        else b.setBackground(ThemeHelper.getRippleDrawableButtonNegative(context));
     }
 
     public static void formatTVSmol(View v) {
         ((TextView)v).setTextSize(Preferences.getFontSize() - SMOL_OFFSET);
     }
-
 
     public static void formatTVSmall(View v) {
         ((TextView)v).setTextSize(Preferences.getFontSize() - SMALL_OFFSET);
@@ -101,9 +96,8 @@ public class UIFormatter {
     private static void formatSettings(Activity activity) {
         Button btnCancel = activity.findViewById(R.id.btn_cancel_settings);
         Button btnApply = activity.findViewById(R.id.btn_apply_settings);
-        formatButton(btnCancel);
-        formatButton(btnApply);
-        btnApply.setBackground(activity.getResources().getDrawable(R.drawable.ripple_ocean));
+        formatButton(btnApply, true, activity);
+        formatButton(btnCancel, false, activity);
     }
 
     public static void formatGenPref(PreferenceViewHolder view) {
@@ -116,9 +110,8 @@ public class UIFormatter {
         formatTVSmall(view.findViewById(R.id.tv_preview));
     }
 
-    // TODO
     public static void formatTextViewToTheme(TextView tv, Context context) {
-        tv.setTextColor(ContextCompat.getColor(context, R.color.indigo));
+        tv.setTextColor(ThemeHelper.getThemeColorPrimaryDark(context));
     }
 
     /**
@@ -151,11 +144,10 @@ public class UIFormatter {
         edtDbr.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
 
         Button btnSubmit = activity.findViewById(R.id.btn_submit);
-        btnSubmit.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
-        btnSubmit.setBackground(activity.getResources().getDrawable(R.drawable.ripple_ocean));
+        formatButton(btnSubmit, true, activity);
 
         Button btnCancel = activity.findViewById(R.id.btn_cancel);
-        btnCancel.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
+        formatButton(btnCancel, false, activity);
     }
 
     /**
@@ -176,8 +168,8 @@ public class UIFormatter {
         HomeActivity homeActivity = (HomeActivity) activity;
         TextView tvHomeYear = homeActivity.findViewById(R.id.tv_home_year);
         tvHomeYear.setTextSize(Preferences.getFontSize() - UIFormatter.MEDIUM_OFFSET);
-//        FloatingActionButton fabAdd = ((HomeActivity)activity).findViewById(R.id.btn_add);
-//        fabAdd.setBackgroundColor(activity.getResources().getColor(R.style.Ocean.colorPrimaryDark));
+        FloatingActionButton fabAdd = ((HomeActivity)activity).findViewById(R.id.btn_add);
+        fabAdd.setBackgroundTintList(ColorStateList.valueOf(ThemeHelper.getThemeColorPrimaryDark(activity)));
     }
 
     public static void formatEventItem(View eventView, int prefFontSize, Context context) {
@@ -193,26 +185,17 @@ public class UIFormatter {
         TextView tv_year = eventView.findViewById(R.id.tv_event_year);
         tv_year.setTextSize(prefFontSize - UIFormatter.MEDIUM_OFFSET);
 
-        View list_view = eventView.findViewById(R.id.list_item);
+        View list_view = eventView.findViewById(R.id.ll_list_item);
+        if(list_view == null) list_view = eventView.findViewById(R.id.list_item);
         ConstraintLayout cl_list_view = list_view.findViewById(R.id.cl_list_item);
-        cl_list_view.setBackground(ContextCompat.getDrawable(context, R.drawable.ripple_ocean));
+        cl_list_view.setBackground(ThemeHelper.getRippleDrawablePrimary(context));
     }
 
-    public static void colorHeader(Context context, Toolbar toolbar, String theme) {
-        Resources res = context.getResources();
-        int color;
-
-        switch(theme) {
-            case OCEAN: color = res.getColor(R.color.indigo); break;
-            default: color = res.getColor(R.color.colorPrimaryDark); break;
-        }
-
-        toolbar.setBackgroundColor(color);
+    public static void colorHeader(Context context, Toolbar toolbar) {
+        toolbar.setBackgroundColor(ThemeHelper.getThemeColorPrimaryDark(context));
     }
 
     public static class EventFormatter {
-        String themeString;
-
         /**
          * A helper method to specifically set the colors of the tv_desc, tv_date, and tv_dbr TextViews
          * inside a ViewHolder.
@@ -226,31 +209,19 @@ public class UIFormatter {
         }
 
         private static void styleEventDual(Context context, Event event,
-                                           EventAdapter.EventViewHolder holder,
-                                           int resId) {
+                                           EventAdapter.EventViewHolder holder) {
             // a ViewHolder being selected overrides all of its other colors/styles
             if (event.isSelected()) {
-                holder.getClListItem().setBackground(ContextCompat.getDrawable(context,
-                        R.drawable.item_bg_blue));
-                setTextViewColors(holder, ContextCompat.getColor(context, R.color.white));
+                holder.getClListItem().setBackground(ThemeHelper.getSelectedEventDrawable(context));
+                setTextViewColors(holder, ThemeHelper.getColorWhite(context));
             }
             // set style based on position (alternating colors)
             else if (holder.getAdapterPosition() % 2 == 1) {
-                holder.getClListItem().setBackground(ContextCompat.getDrawable(context,
-                        R.drawable.ripple_gray));
-                setTextViewColors(holder, ContextCompat.getColor(context, R.color.darkGray));
+                holder.getClListItem().setBackground(ThemeHelper.getRippleDrawableGray(context));
+                setTextViewColors(holder, ThemeHelper.getColorDarkGray(context));
             } else {
-                holder.getClListItem().setBackground(ContextCompat.getDrawable(context, resId));
-                setTextViewColors(holder, ContextCompat.getColor(context, R.color.white));
-            }
-        }
-
-        private static int getThemeDrawable(String themeString) {
-            switch(themeString) {
-                case OCEAN:
-                    return R.drawable.ripple_ocean;
-                default:
-                    return R.drawable.ripple_red;
+                holder.getClListItem().setBackground(ThemeHelper.getRippleDrawablePrimary(context));
+                setTextViewColors(holder, ThemeHelper.getColorWhite(context));
             }
         }
 
@@ -258,15 +229,14 @@ public class UIFormatter {
                                       EventAdapter.EventViewHolder holder,
                                       String themeString) {
             switch(themeString) {
-                case RED_VELVET:
-                case OCEAN:
-                case GRAPE:
-                case MANGO:
-                case FOREST:
-                    styleEventDual(context, event, holder, getThemeDrawable(themeString));
+                case ThemeHelper.RED_VELVET:
+                case ThemeHelper.OCEAN:
+                case ThemeHelper.GRAPE:
+                case ThemeHelper.MANGO:
+                case ThemeHelper.FOREST:
+                    styleEventDual(context, event, holder);
             }
         }
-
 
     }
 }

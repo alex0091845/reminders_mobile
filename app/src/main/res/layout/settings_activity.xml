@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:text="Apply"
             android:textSize="18sp"
-            android:background="@drawable/ripple_button"
+            android:background="@drawable/ripple_red_velvet_dark"
             android:textColor="@color/white"
             android:layout_marginRight="15dp"
             android:layout_marginVertical="15dp"/>

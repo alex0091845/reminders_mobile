@@ -158,7 +158,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_marginRight="15dp"
-            android:background="@drawable/ripple_button"
+            android:background="@drawable/ripple_red_velvet_dark"
             android:text="Add"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />

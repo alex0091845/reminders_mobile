@@ -8,6 +8,8 @@ import android.net.Uri;
 
 import androidx.preference.PreferenceManager;
 
+import org.chowmein.reminders.helpers.ThemeHelper;
+
 /**
  * A static class used to abstract away the minute details of getting the preferences
  * and instead just assigns each preference to its own public static variable for other
@@ -26,6 +28,7 @@ public class Preferences {
 
     private static int fontSize;
     static Uri ringtoneUri;
+    private static String theme = ThemeHelper.OCEAN;
 
     /**
      * Hide the default constructor.
@@ -76,5 +79,14 @@ public class Preferences {
      */
     public static void setFontSize(int fontSize) {
         Preferences.fontSize = fontSize;
+    }
+
+
+    /**
+     * Gets theme string
+     * @return theme
+     */
+    public static String getTheme() {
+        return theme;
     }
 }

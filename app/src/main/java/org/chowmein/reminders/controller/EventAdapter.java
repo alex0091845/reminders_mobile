@@ -250,7 +250,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         setTextViewSizes(holder);
 
-        UIFormatter.EventFormatter.styleEvent(context, event, holder, "Ocean");
+        UIFormatter.EventFormatter.styleEvent(context, event, holder, Preferences.getTheme());
     }
 
     /**

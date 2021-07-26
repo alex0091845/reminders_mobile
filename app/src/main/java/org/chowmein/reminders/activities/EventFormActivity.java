@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import org.chowmein.reminders.R;
+import org.chowmein.reminders.helpers.ThemeHelper;
 import org.chowmein.reminders.managers.DatesManager;
 import org.chowmein.reminders.managers.UIFormatter;
 import org.chowmein.reminders.model.Event;
@@ -43,7 +44,7 @@ public class EventFormActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Ocean);
+        setTheme(ThemeHelper.getThemeStyle());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_form);
 
@@ -106,7 +107,7 @@ public class EventFormActivity extends AppCompatActivity {
         btn_date.setOnClickListener(e -> onDateButtonClicked());
 
         UIFormatter.format(this, UIFormatter.ADDEDIT);
-        UIFormatter.colorHeader(this, tb_title, "Ocean");
+        UIFormatter.colorHeader(this, tb_title);
     }
 
     private void onCancelButtonClicked() {

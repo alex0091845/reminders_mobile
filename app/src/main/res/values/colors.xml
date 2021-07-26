@@ -3,6 +3,9 @@
     <color name="colorPrimary">#FF5F5F</color>
     <color name="colorPrimaryDark">#FF4646</color>
     <color name="colorAccent">#FF7D7D</color>
+    <color name="redVelvetAccent">#FF7D7D</color>
+    <color name="redVelvetPrimary">#FF5F5F</color>
+    <color name="redVelvetPrimaryDark">#FF4646</color>
     <color name="white">#FFFFFF</color>
     <color name="darkGray">#393939</color>
     <color name="gray">#D6D6D6</color>
@@ -15,6 +18,7 @@
     <color name="melrose">#9B94FF</color>
     <color name="malibu">#B3AEFF</color>
     <color name="maliblue">#7893FF</color>
-    <color name="cornflowerBlue">#6987FF</color>
-    <color name="indigo">#4864D4</color>
+    <color name="oceanAccent">#8DA3FB</color>
+    <color name="oceanPrimary">#6987FF</color>
+    <color name="oceanPrimaryDark">#4864D4</color>
 </resources>
