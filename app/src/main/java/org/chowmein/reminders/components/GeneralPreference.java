@@ -9,6 +9,8 @@ import androidx.preference.PreferenceViewHolder;
 import org.chowmein.reminders.managers.UIFormatter;
 
 public class GeneralPreference extends Preference {
+    PreferenceViewHolder viewHolder;
+
     public GeneralPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
@@ -28,7 +30,12 @@ public class GeneralPreference extends Preference {
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
+        this.viewHolder = holder;
 
         UIFormatter.formatGenPref(holder);
+    }
+
+    public PreferenceViewHolder getViewHolder() {
+        return this.viewHolder;
     }
 }

@@ -15,7 +15,6 @@ package org.chowmein.reminders.activities;
 
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -41,7 +40,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.controller.EventAdapter;
 import org.chowmein.reminders.controller.EventItemDecoration;
-import org.chowmein.reminders.helpers.ThemeHelper;
 import org.chowmein.reminders.managers.DatesManager;
 import org.chowmein.reminders.managers.EventManager;
 import org.chowmein.reminders.managers.JsonHelper;
@@ -99,7 +97,6 @@ public class HomeActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeHelper.getThemeStyle());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -128,17 +125,11 @@ public class HomeActivity extends AppCompatActivity {
 
         // set up the views that require more detailed implementations
         setSupportActionBar(toolbar);
-        UIFormatter.colorHeader(this, toolbar);
         initRecyclerView();
         setTvHomeYear(savedInstanceState);
 
         // just ensures that the alarm is set
         EventManager.registerAlarmTomorrow(this);
-    }
-
-    @Override
-    public Resources.Theme getTheme() {
-        return super.getTheme();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -357,6 +348,10 @@ public class HomeActivity extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
+        if(Preferences.prefsChanged) {
+            UIFormatter.setStatusBarColor(this);
+        }
+
         super.onResume();
 
         updateStylesOnPrefsChanged();

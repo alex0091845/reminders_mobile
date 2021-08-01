@@ -44,6 +44,7 @@ public class SettingsActivity
 
     private int initFontSize;
     private String initRingtoneName;
+    private String initTheme;
     private static final int O_RINGTONE_REQ_CODE = 1;
 
     @Override
@@ -55,6 +56,7 @@ public class SettingsActivity
         Preferences.prefsChanged = false;
         this.initFontSize = Preferences.getFontSize();
         this.initRingtoneName = Preferences.getCurrentRingtoneName(this);
+        this.initTheme = Preferences.getTheme();
 
         setContentView(R.layout.settings_activity);
         initViews();
@@ -81,8 +83,10 @@ public class SettingsActivity
     private void onBackButtonPressed() {
         Preferences.prefsChanged = false;
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        Preferences.setTheme(initTheme);
         editor.putInt(Preferences.FONT_SIZE_KEY, initFontSize)
                 .putString(Preferences.RINGTONE_KEY, initRingtoneName)
+                .putString(Preferences.THEME_KEY, initTheme)
                 .apply();
         finish();
     }
@@ -105,6 +109,11 @@ public class SettingsActivity
             // format the settings activity in general
             UIFormatter.format(getActivity(), UIFormatter.SETTINGS);
 
+            initRingtonePref();
+            initThemePref();
+        }
+
+        private void initRingtonePref() {
             // go through all this just to get the name of the ringtone
             SharedPreferences sharedPrefs = PreferenceManager
                     .getDefaultSharedPreferences(this.getContext());
@@ -128,39 +137,54 @@ public class SettingsActivity
             Preference ringtonePref = findPreference(Preferences.RINGTONE_KEY);
             ringtonePref.setSummary(ringtoneName);
 
-            ringtonePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        Intent notificationSettings =
-                                new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
-                        notificationSettings.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
-                        notificationSettings.putExtra(Settings.EXTRA_CHANNEL_ID, EventManager.CID);
-                        startActivityForResult(notificationSettings, O_RINGTONE_REQ_CODE);
-                        return true;
-                    }
-
-                    // go through all this just to get the name of the ringtone
-                    SharedPreferences sharedPrefs = PreferenceManager
-                            .getDefaultSharedPreferences(SettingsFragment.this.getContext());
-                    String ringtoneStr = sharedPrefs.getString(Preferences.RINGTONE_KEY,
-                            Preferences.DEFAULT_RINGTONE_VALUE);
-
-                    // default uri to null, then set if not Silent
-                    Uri ringtoneUri = Uri.parse(ringtoneStr);
-
-                    Intent ringtonePicker = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                    ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
-                            RingtoneManager.TYPE_NOTIFICATION);
-
-                    if(!ringtoneUri.toString().equals(Preferences.DEFAULT_RINGTONE_VALUE)) {
-                        ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
-                                ringtoneUri);
-                    }
-
-                    startActivityForResult(ringtonePicker, RingtoneManager.TYPE_NOTIFICATION);
+            ringtonePref.setOnPreferenceClickListener(preference -> {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Intent notificationSettings =
+                            new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                    notificationSettings.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
+                    notificationSettings.putExtra(Settings.EXTRA_CHANNEL_ID, EventManager.CID);
+                    startActivityForResult(notificationSettings, O_RINGTONE_REQ_CODE);
                     return true;
                 }
+
+                // go through all this just to get the name of the ringtone
+                SharedPreferences sharedPrefs1 = PreferenceManager
+                        .getDefaultSharedPreferences(SettingsFragment.this.getContext());
+                String ringtoneStr1 = sharedPrefs1.getString(Preferences.RINGTONE_KEY,
+                        Preferences.DEFAULT_RINGTONE_VALUE);
+
+                // default uri to null, then set if not Silent
+                Uri ringtoneUri1 = Uri.parse(ringtoneStr1);
+
+                Intent ringtonePicker = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
+                        RingtoneManager.TYPE_NOTIFICATION);
+
+                if(!ringtoneUri1.toString().equals(Preferences.DEFAULT_RINGTONE_VALUE)) {
+                    ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
+                            ringtoneUri1);
+                }
+
+                startActivityForResult(ringtonePicker, RingtoneManager.TYPE_NOTIFICATION);
+                return true;
+            });
+        }
+
+        private void initThemePref() {
+            SharedPreferences sharedPrefs = PreferenceManager
+                    .getDefaultSharedPreferences(this.getContext());
+
+            String themeName = Preferences.getTheme();
+            Preference themePref = findPreference(Preferences.THEME_KEY);
+            themePref.setSummary(themeName);
+
+            themePref.setOnPreferenceChangeListener((preference, newValue) -> {
+                Preferences.setTheme(newValue.toString());
+                this.getContext().setTheme(ThemeHelper.getThemeStyle());
+                Preferences.prefsChanged = true;
+                preference.setSummary(newValue.toString());
+                UIFormatter.format(this.getActivity(), UIFormatter.SETTINGS);
+                return true;
             });
         }
 
@@ -179,6 +203,9 @@ public class SettingsActivity
 
             if(data == null && requestCode != O_RINGTONE_REQ_CODE) return;
 
+            SharedPreferences sharedPrefs = PreferenceManager.
+                    getDefaultSharedPreferences(this.getContext());
+
             Uri ringtoneUri;
 
             /* Android version above O */
@@ -189,9 +216,6 @@ public class SettingsActivity
                 ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             }
 
-            SharedPreferences sharedPrefs = PreferenceManager.
-                    getDefaultSharedPreferences(this.getContext());
-            
             // set default to None
             String ringtoneUriStr = Preferences.DEFAULT_RINGTONE_VALUE;
             String ringtoneName = Preferences.DEFAULT_RINGTONE_VALUE;

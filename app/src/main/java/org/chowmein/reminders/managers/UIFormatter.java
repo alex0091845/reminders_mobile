@@ -6,15 +6,21 @@ package org.chowmein.reminders.managers;
  * https://stackoverflow.com/questions/4743116/get-screen-width-and-height-in-android
  * Setting constraint layout margins:
  * https://stackoverflow.com/questions/52148129/programmatically-set-margin-to-constraintlayout
+ * Setting seekbar progress color:
+ * https://stackoverflow.com/questions/45329174/how-to-change-seekbar-color-in-android-programmatically
  */
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +31,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.chowmein.reminders.R;
 import org.chowmein.reminders.activities.HomeActivity;
+import org.chowmein.reminders.activities.SettingsActivity;
+import org.chowmein.reminders.components.FontSizePreference;
+import org.chowmein.reminders.components.GeneralPreference;
+import org.chowmein.reminders.components.GeneralPreferenceCategory;
+import org.chowmein.reminders.components.ThemePreference;
 import org.chowmein.reminders.controller.EventAdapter;
 import org.chowmein.reminders.helpers.ThemeHelper;
 import org.chowmein.reminders.model.Event;
@@ -56,6 +67,8 @@ public class UIFormatter {
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         width = dm.widthPixels;
+
+        UIFormatter.setStatusBarColor(activity);
 
         switch (activityId) {
             case HOME:
@@ -98,6 +111,39 @@ public class UIFormatter {
         Button btnApply = activity.findViewById(R.id.btn_apply_settings);
         formatButton(btnApply, true, activity);
         formatButton(btnCancel, false, activity);
+
+        SettingsActivity settingsActivity = (SettingsActivity) activity;
+        View eventView = settingsActivity.findViewById(R.id.list_item);
+
+        if(eventView != null) {
+            View settingsRootView = eventView.getRootView();
+            SettingsActivity.SettingsFragment fragment =
+                    (SettingsActivity.SettingsFragment) settingsActivity
+                            .getSupportFragmentManager()
+                            .getFragments()
+                            .get(0);
+
+            PreferenceViewHolder fontSizeViewHolder = ((FontSizePreference) fragment.findPreference(Preferences.FONT_SIZE_KEY)).getViewHolder();
+            PreferenceViewHolder genPrefCatViewHolder = ((GeneralPreferenceCategory) fragment.findPreference(Preferences.FONT_SIZE_KEY).getParent()).getViewHolder();
+            PreferenceViewHolder ringtoneViewHolder = ((GeneralPreference) fragment.findPreference(Preferences.RINGTONE_KEY)).getViewHolder();
+            PreferenceViewHolder themeViewHolder = ((ThemePreference) fragment.findPreference(Preferences.THEME_KEY)).getViewHolder();
+
+            formatGenPrefCategory(genPrefCatViewHolder, activity);
+            formatFontSizePref(fontSizeViewHolder, activity);
+            formatGenPref(ringtoneViewHolder);
+            formatGenPref(themeViewHolder);
+        }
+    }
+
+    public static void formatGenPrefCategory(PreferenceViewHolder holder, Context context) {
+        TextView tv_title = (TextView) holder.findViewById(android.R.id.title);
+        UIFormatter.formatTVMedium(tv_title);
+        UIFormatter.formatTextViewToTheme(tv_title, context);
+    }
+
+    public static void setSeekbarToTheme(SeekBar seekbar, Activity activity) {
+        seekbar.setThumbTintList(ColorStateList.valueOf(ThemeHelper.getThemeColorAccent(activity)));
+        seekbar.getProgressDrawable().setColorFilter(ThemeHelper.getThemeColorAccent(activity), PorterDuff.Mode.MULTIPLY);
     }
 
     public static void formatGenPref(PreferenceViewHolder view) {
@@ -105,9 +151,20 @@ public class UIFormatter {
         formatTVSmol(view.findViewById(android.R.id.summary));
     }
 
-    public static void formatFontSizePref(PreferenceViewHolder view) {
+    public static void formatFontSizePref(PreferenceViewHolder view, Context context) {
         formatGenPref(view);
+        setSeekbarToTheme((SeekBar)view.findViewById(R.id.seekbar), (Activity) context);
+
+        SettingsActivity settingsActivity = ((SettingsActivity) context);
+
+        formatEventItem(view, Preferences.getFontSize(), (Activity) context);
         formatTVSmall(view.findViewById(R.id.tv_preview));
+
+        TextView tvPreview = (TextView) view.findViewById(R.id.tv_preview);
+        formatTVSmall(tvPreview);
+
+        SeekBar seekbar = (SeekBar) view.findViewById(R.id.seekbar);
+        setSeekbarToTheme(seekbar, settingsActivity);
     }
 
     public static void formatTextViewToTheme(TextView tv, Context context) {
@@ -168,6 +225,8 @@ public class UIFormatter {
         HomeActivity homeActivity = (HomeActivity) activity;
         TextView tvHomeYear = homeActivity.findViewById(R.id.tv_home_year);
         tvHomeYear.setTextSize(Preferences.getFontSize() - UIFormatter.MEDIUM_OFFSET);
+        Toolbar toolbar = homeActivity.findViewById(R.id.tb_title);
+        colorHeader(homeActivity, toolbar);
         FloatingActionButton fabAdd = ((HomeActivity)activity).findViewById(R.id.btn_add);
         fabAdd.setBackgroundTintList(ColorStateList.valueOf(ThemeHelper.getThemeColorPrimaryDark(activity)));
     }
@@ -191,8 +250,40 @@ public class UIFormatter {
         cl_list_view.setBackground(ThemeHelper.getRippleDrawablePrimary(context));
     }
 
+    public static void formatEventItem(PreferenceViewHolder eventView, int prefFontSize, Context context) {
+        TextView tv_desc = (TextView) eventView.findViewById(R.id.tv_event_desc);
+        tv_desc.setTextSize(prefFontSize);
+
+        TextView tv_date = (TextView) eventView.findViewById(R.id.tv_event_date);
+        tv_date.setTextSize(prefFontSize);
+
+        TextView tv_dbr = (TextView) eventView.findViewById(R.id.tv_event_dbr);
+        tv_dbr.setTextSize(prefFontSize - UIFormatter.SMALL_OFFSET);
+
+        TextView tv_year = (TextView) eventView.findViewById(R.id.tv_event_year);
+        tv_year.setTextSize(prefFontSize - UIFormatter.MEDIUM_OFFSET);
+
+        View list_view = eventView.findViewById(R.id.ll_list_item);
+        if(list_view == null) list_view = eventView.findViewById(R.id.list_item);
+        ConstraintLayout cl_list_view = list_view.findViewById(R.id.cl_list_item);
+        cl_list_view.setBackground(ThemeHelper.getRippleDrawablePrimary(context));
+    }
+
     public static void colorHeader(Context context, Toolbar toolbar) {
         toolbar.setBackgroundColor(ThemeHelper.getThemeColorPrimaryDark(context));
+    }
+
+    public static void setStatusBarColor(Activity activity) {
+        Window window = activity.getWindow();
+
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        // finally change the color
+        window.setStatusBarColor(ThemeHelper.getThemeColorPrimaryDark(activity));
     }
 
     public static class EventFormatter {

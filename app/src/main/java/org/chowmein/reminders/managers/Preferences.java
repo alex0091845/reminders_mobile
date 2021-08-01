@@ -18,8 +18,10 @@ import org.chowmein.reminders.helpers.ThemeHelper;
 public class Preferences {
     public static final String FONT_SIZE_KEY = "fontSize";
     public static final String RINGTONE_KEY = "ringtone";
+    public static final String THEME_KEY = "theme";
     public static final String DEFAULT_RINGTONE_VALUE = "None";
-    private static final int DEFAULT_FONT_SIZE = 22;
+    public static final int DEFAULT_FONT_SIZE = 22;
+    public static final String DEFAULT_THEME = "Red Velvet";
 
     /* indicating whether any prefs have changed. This will be set in the onCreate() callback
     * of the SettingsActivity, and set again to true in the onPreferenceChanged() in its inner
@@ -28,6 +30,7 @@ public class Preferences {
 
     private static int fontSize;
     static Uri ringtoneUri;
+
     private static String theme = ThemeHelper.OCEAN;
 
     /**
@@ -47,6 +50,7 @@ public class Preferences {
         Preferences.setFontSize(shrdprefs.getInt(FONT_SIZE_KEY, DEFAULT_FONT_SIZE));
         Preferences.ringtoneUri = Uri.parse(shrdprefs.getString(RINGTONE_KEY,
                 DEFAULT_RINGTONE_VALUE));
+        Preferences.theme = shrdprefs.getString(THEME_KEY, DEFAULT_THEME);
     }
 
     /**
@@ -88,5 +92,10 @@ public class Preferences {
      */
     public static String getTheme() {
         return theme;
+    }
+
+
+    public static void setTheme(String theme) {
+        Preferences.theme = theme;
     }
 }
