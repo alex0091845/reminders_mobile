@@ -27,4 +27,7 @@
     <color name="grapeAccent">#C275FF</color>
     <color name="grapePrimary">#C275FF</color>
     <color name="grapePrimaryDark">#9457C3</color>
+    <color name="forestAccent">#11C055</color>
+    <color name="forestPrimary">#11C055</color>
+    <color name="forestPrimaryDark">#2E9543</color>
 </resources>
