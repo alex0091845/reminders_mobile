@@ -179,6 +179,7 @@ public class UIFormatter {
         TextView tvDate = activity.findViewById(R.id.tv_date);
         setMarginAndWidthAddEdit(tvDate);
         tvDate.setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
+        formatTextViewToTheme(tvDate, activity);
 
         Button btnDate = activity.findViewById(R.id.btn_date);
         setMarginAndWidthAddEdit(btnDate);
@@ -187,6 +188,7 @@ public class UIFormatter {
         TextView tvDesc = activity.findViewById(R.id.tv_desc);
         setMarginAndWidthAddEdit(tvDesc);
         tvDesc.setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
+        formatTextViewToTheme(tvDesc, activity);
 
         EditText edtDesc = activity.findViewById(R.id.edt_desc);
         setMarginAndWidthAddEdit(edtDesc);
@@ -195,6 +197,7 @@ public class UIFormatter {
         TextView tvDbr = activity.findViewById(R.id.tv_dbr);
         setMarginAndWidthAddEdit(tvDbr);
         tvDbr.setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
+        formatTextViewToTheme(tvDbr, activity);
 
         EditText edtDbr = activity.findViewById(R.id.edt_dbr);
         setMarginAndWidthAddEdit(edtDbr);
