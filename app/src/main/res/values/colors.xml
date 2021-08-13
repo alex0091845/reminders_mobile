@@ -24,4 +24,7 @@
     <color name="mangoAccent">#FFA744</color>
     <color name="mangoPrimary">#FFA744</color>
     <color name="mangoPrimaryDark">#FC7900</color>
+    <color name="grapeAccent">#C275FF</color>
+    <color name="grapePrimary">#C275FF</color>
+    <color name="grapePrimaryDark">#9457C3</color>
 </resources>

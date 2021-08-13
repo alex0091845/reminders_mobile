@@ -27,6 +27,13 @@
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 
+    <style name="Grape" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/grapePrimary</item>
+        <item name="colorPrimaryDark">@color/grapePrimaryDark</item>
+        <item name="colorAccent">@color/grapeAccent</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
+    </style>
+
     <style name="OverflowMenuButton" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">#FFFFFF</item>
     </style>

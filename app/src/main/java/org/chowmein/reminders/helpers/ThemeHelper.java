@@ -31,8 +31,8 @@ public class ThemeHelper {
                 return R.style.Mango;
             case OCEAN:
                 return R.style.Ocean;
-//            case GRAPE:
-//                return ContextCompat.getColor(context, R.color.redVelvetAccent);
+            case GRAPE:
+                return R.style.Grape;
 //            case FOREST:
 //                return ContextCompat.getColor(context, R.color.redVelvetAccent);
 //            case SHERBET:
@@ -54,8 +54,8 @@ public class ThemeHelper {
                 return ContextCompat.getColor(context, R.color.mangoAccent);
             case OCEAN:
                 return ContextCompat.getColor(context, R.color.oceanAccent);
-//            case GRAPE:
-//                return ContextCompat.getColor(context, R.color.redVelvetAccent);
+            case GRAPE:
+                return ContextCompat.getColor(context, R.color.grapeAccent);
 //            case FOREST:
 //                return ContextCompat.getColor(context, R.color.redVelvetAccent);
 //            case SHERBET:
@@ -77,8 +77,8 @@ public class ThemeHelper {
                 return ContextCompat.getColor(context, R.color.mangoPrimary);
             case OCEAN:
                 return ContextCompat.getColor(context, R.color.oceanPrimary);
-//            case GRAPE:
-//                return ContextCompat.getColor(context, R.color.redVelvetAccent);
+            case GRAPE:
+                return ContextCompat.getColor(context, R.color.grapePrimary);
 //            case FOREST:
 //                return ContextCompat.getColor(context, R.color.redVelvetAccent);
 //            case SHERBET:
@@ -100,8 +100,8 @@ public class ThemeHelper {
                 return ContextCompat.getColor(context, R.color.mangoPrimaryDark);
             case OCEAN:
                 return ContextCompat.getColor(context, R.color.oceanPrimaryDark);
-//            case GRAPE:
-//                return ContextCompat.getColor(context, R.color.redVelvetAccent);
+            case GRAPE:
+                return ContextCompat.getColor(context, R.color.grapePrimaryDark);
 //            case FOREST:
 //                return ContextCompat.getColor(context, R.color.redVelvetAccent);
 //            case SHERBET:
@@ -123,8 +123,8 @@ public class ThemeHelper {
                 return ContextCompat.getDrawable(context, R.drawable.ripple_mango_dark);
             case OCEAN:
                 return ContextCompat.getDrawable(context, R.drawable.ripple_ocean_dark);
-//            case GRAPE:
-//                return ContextCompat.getDrawable(context, R.drawable.redVelvetAccent);
+            case GRAPE:
+                return ContextCompat.getDrawable(context, R.drawable.ripple_grape_dark);
 //            case FOREST:
 //                return ContextCompat.getDrawable(context, R.drawable.redVelvetAccent);
 //            case SHERBET:
@@ -146,8 +146,8 @@ public class ThemeHelper {
                 return ContextCompat.getDrawable(context, R.drawable.ripple_mango);
             case OCEAN:
                 return ContextCompat.getDrawable(context, R.drawable.ripple_ocean);
-//            case GRAPE:
-//                return ContextCompat.getDrawable(context, R.drawable.redVelvetAccent);
+            case GRAPE:
+                return ContextCompat.getDrawable(context, R.drawable.ripple_grape);
 //            case FOREST:
 //                return ContextCompat.getDrawable(context, R.drawable.redVelvetAccent);
 //            case SHERBET:
