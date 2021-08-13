@@ -21,4 +21,7 @@
     <color name="oceanAccent">#8DA3FB</color>
     <color name="oceanPrimary">#6987FF</color>
     <color name="oceanPrimaryDark">#4864D4</color>
+    <color name="mangoAccent">#FFA744</color>
+    <color name="mangoPrimary">#FFA744</color>
+    <color name="mangoPrimaryDark">#FC7900</color>
 </resources>

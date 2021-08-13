@@ -27,8 +27,8 @@ public class ThemeHelper {
         switch(theme) {
             case RED_VELVET:
                 return R.style.AppTheme;
-//            case MANGO:
-//                return ContextCompat.getColor(context, R.color.redVelvetAccent);
+            case MANGO:
+                return R.style.Mango;
             case OCEAN:
                 return R.style.Ocean;
 //            case GRAPE:
@@ -50,8 +50,8 @@ public class ThemeHelper {
         switch(theme) {
             case RED_VELVET:
                 return ContextCompat.getColor(context, R.color.redVelvetAccent);
-//            case MANGO:
-//                return ContextCompat.getColor(context, R.color.redVelvetAccent);
+            case MANGO:
+                return ContextCompat.getColor(context, R.color.mangoAccent);
             case OCEAN:
                 return ContextCompat.getColor(context, R.color.oceanAccent);
 //            case GRAPE:
@@ -73,8 +73,8 @@ public class ThemeHelper {
         switch(theme) {
             case RED_VELVET:
                 return ContextCompat.getColor(context, R.color.redVelvetPrimary);
-//            case MANGO:
-//                return ContextCompat.getColor(context, R.color.redVelvetAccent);
+            case MANGO:
+                return ContextCompat.getColor(context, R.color.mangoPrimary);
             case OCEAN:
                 return ContextCompat.getColor(context, R.color.oceanPrimary);
 //            case GRAPE:
@@ -96,8 +96,8 @@ public class ThemeHelper {
         switch(theme) {
             case RED_VELVET:
                 return ContextCompat.getColor(context, R.color.redVelvetPrimaryDark);
-//            case MANGO:
-//                return ContextCompat.getColor(context, R.color.redVelvetAccent);
+            case MANGO:
+                return ContextCompat.getColor(context, R.color.mangoPrimaryDark);
             case OCEAN:
                 return ContextCompat.getColor(context, R.color.oceanPrimaryDark);
 //            case GRAPE:
@@ -119,8 +119,8 @@ public class ThemeHelper {
         switch(theme) {
             case RED_VELVET:
                 return ContextCompat.getDrawable(context, R.drawable.ripple_red_velvet_dark);
-//            case MANGO:
-//                return ContextCompat.getDrawable(context, R.drawable.redVelvetAccent);
+            case MANGO:
+                return ContextCompat.getDrawable(context, R.drawable.ripple_mango_dark);
             case OCEAN:
                 return ContextCompat.getDrawable(context, R.drawable.ripple_ocean_dark);
 //            case GRAPE:
@@ -142,8 +142,8 @@ public class ThemeHelper {
         switch(theme) {
             case RED_VELVET:
                 return ContextCompat.getDrawable(context, R.drawable.ripple_red_velvet);
-//            case MANGO:
-//                return ContextCompat.getDrawable(context, R.drawable.redVelvetAccent);
+            case MANGO:
+                return ContextCompat.getDrawable(context, R.drawable.ripple_mango);
             case OCEAN:
                 return ContextCompat.getDrawable(context, R.drawable.ripple_ocean);
 //            case GRAPE:

@@ -2,6 +2,7 @@
     <!-- Theme Preference -->
     <string-array name="theme_names">
         <item>Red Velvet</item>
+        <item>Mango</item>
         <item>Ocean</item>
     </string-array>
 </resources>
