@@ -21,8 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import org.chowmein.reminders.R;
-import org.chowmein.reminders.helpers.ThemeHelper;
 import org.chowmein.reminders.managers.DatesManager;
+import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.managers.UIFormatter;
 import org.chowmein.reminders.model.Event;
 
@@ -44,7 +44,7 @@ public class EventFormActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeHelper.getThemeStyle());
+        setTheme(Preferences.getTheme().getThemeStyle());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_form);
 

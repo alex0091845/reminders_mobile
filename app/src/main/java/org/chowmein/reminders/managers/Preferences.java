@@ -8,7 +8,14 @@ import android.net.Uri;
 
 import androidx.preference.PreferenceManager;
 
-import org.chowmein.reminders.helpers.ThemeHelper;
+import org.chowmein.reminders.model.themes.ForestTheme;
+import org.chowmein.reminders.model.themes.GrapeTheme;
+import org.chowmein.reminders.model.themes.MangoTheme;
+import org.chowmein.reminders.model.themes.OceanTheme;
+import org.chowmein.reminders.model.themes.RedVelvetTheme;
+import org.chowmein.reminders.model.themes.SherbetTheme;
+import org.chowmein.reminders.model.themes.Theme;
+import org.chowmein.reminders.model.themes.UnicornTheme;
 
 /**
  * A static class used to abstract away the minute details of getting the preferences
@@ -31,7 +38,17 @@ public class Preferences {
     private static int fontSize;
     static Uri ringtoneUri;
 
-    private static String theme = ThemeHelper.OCEAN;
+    private static Theme[] themes = new Theme[] {
+            new RedVelvetTheme(),
+            new OceanTheme(),
+            new MangoTheme(),
+            new GrapeTheme(),
+            new ForestTheme(),
+            new SherbetTheme(),
+            new UnicornTheme()
+    };
+    private static Theme theme;
+    private static String themeStr;
 
     /**
      * Hide the default constructor.
@@ -50,7 +67,27 @@ public class Preferences {
         Preferences.setFontSize(shrdprefs.getInt(FONT_SIZE_KEY, DEFAULT_FONT_SIZE));
         Preferences.ringtoneUri = Uri.parse(shrdprefs.getString(RINGTONE_KEY,
                 DEFAULT_RINGTONE_VALUE));
-        Preferences.theme = shrdprefs.getString(THEME_KEY, DEFAULT_THEME);
+        Preferences.themeStr = shrdprefs.getString(THEME_KEY, DEFAULT_THEME);
+        Preferences.theme = themes[getIndexIntoThemes(themeStr)];
+    }
+
+    public static int getIndexIntoThemes(String themeStr) {
+        switch(themeStr) {
+            case "Ocean":
+                return 1;
+            case "Mango":
+                return 2;
+            case "Grape":
+                return 3;
+            case "Forest":
+                return 4;
+            case "Sherbet":
+                return 5;
+            case "Unicorn":
+                return 6;
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -90,12 +127,25 @@ public class Preferences {
      * Gets theme string
      * @return theme
      */
-    public static String getTheme() {
+    public static String getThemeStr() {
+        return themeStr;
+    }
+
+    /**
+     * A setter that has a side effect; in addition to setting the themeStr, also sets
+     * the theme since changing themeStr means changing the theme.
+     * @param themeStr
+     */
+    public static void setThemeStr(String themeStr) {
+        Preferences.themeStr = themeStr;
+        setTheme(themes[getIndexIntoThemes(themeStr)]);
+    }
+
+    public static Theme getTheme() {
         return theme;
     }
 
-
-    public static void setTheme(String theme) {
+    public static void setTheme(Theme theme) {
         Preferences.theme = theme;
     }
 }

@@ -30,7 +30,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import org.chowmein.reminders.R;
-import org.chowmein.reminders.helpers.ThemeHelper;
 import org.chowmein.reminders.managers.EventManager;
 import org.chowmein.reminders.managers.Preferences;
 import org.chowmein.reminders.managers.UIFormatter;
@@ -49,14 +48,14 @@ public class SettingsActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeHelper.getThemeStyle());
+        setTheme(Preferences.getTheme().getThemeStyle());
         super.onCreate(savedInstanceState);
 
         // indicated that, for now, preferences have not been changed
         Preferences.prefsChanged = false;
         this.initFontSize = Preferences.getFontSize();
         this.initRingtoneName = Preferences.getCurrentRingtoneName(this);
-        this.initTheme = Preferences.getTheme();
+        this.initTheme = Preferences.getThemeStr();
 
         setContentView(R.layout.settings_activity);
         initViews();
@@ -83,7 +82,7 @@ public class SettingsActivity
     private void onBackButtonPressed() {
         Preferences.prefsChanged = false;
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        Preferences.setTheme(initTheme);
+        Preferences.setThemeStr(initTheme);
         editor.putInt(Preferences.FONT_SIZE_KEY, initFontSize)
                 .putString(Preferences.RINGTONE_KEY, initRingtoneName)
                 .putString(Preferences.THEME_KEY, initTheme)
@@ -174,13 +173,13 @@ public class SettingsActivity
             SharedPreferences sharedPrefs = PreferenceManager
                     .getDefaultSharedPreferences(this.getContext());
 
-            String themeName = Preferences.getTheme();
+            String themeName = Preferences.getThemeStr();
             Preference themePref = findPreference(Preferences.THEME_KEY);
             themePref.setSummary(themeName);
 
             themePref.setOnPreferenceChangeListener((preference, newValue) -> {
-                Preferences.setTheme(newValue.toString());
-                this.getContext().setTheme(ThemeHelper.getThemeStyle());
+                Preferences.setThemeStr(newValue.toString());
+                this.getContext().setTheme(Preferences.getTheme().getThemeStyle());
                 Preferences.prefsChanged = true;
                 preference.setSummary(newValue.toString());
                 UIFormatter.format(this.getActivity(), UIFormatter.SETTINGS);

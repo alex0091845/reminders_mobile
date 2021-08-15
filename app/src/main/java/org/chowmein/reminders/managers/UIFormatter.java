@@ -37,7 +37,6 @@ import org.chowmein.reminders.components.GeneralPreference;
 import org.chowmein.reminders.components.GeneralPreferenceCategory;
 import org.chowmein.reminders.components.ThemePreference;
 import org.chowmein.reminders.controller.EventAdapter;
-import org.chowmein.reminders.helpers.ThemeHelper;
 import org.chowmein.reminders.model.Event;
 
 /**
@@ -86,8 +85,8 @@ public class UIFormatter {
     public static void formatButton(Button b, boolean positive, Context context) {
         b.setTextSize(Preferences.getFontSize() - MEDIUM_OFFSET);
 
-        if(positive) b.setBackground(ThemeHelper.getRippleDrawableButtonPositive(context));
-        else b.setBackground(ThemeHelper.getRippleDrawableButtonNegative(context));
+        if(positive) b.setBackground(Preferences.getTheme().getButtonPositiveDrawable(context));
+        else b.setBackground(Preferences.getTheme().getButtonNegativeDrawable(context));
     }
 
     public static void formatTVSmol(View v) {
@@ -142,8 +141,8 @@ public class UIFormatter {
     }
 
     public static void setSeekbarToTheme(SeekBar seekbar, Activity activity) {
-        seekbar.setThumbTintList(ColorStateList.valueOf(ThemeHelper.getThemeColorAccent(activity)));
-        seekbar.getProgressDrawable().setColorFilter(ThemeHelper.getThemeColorAccent(activity), PorterDuff.Mode.MULTIPLY);
+        seekbar.setThumbTintList(ColorStateList.valueOf(Preferences.getTheme().getSeekBarColor(activity)));
+        seekbar.getProgressDrawable().setColorFilter(Preferences.getTheme().getSeekBarColor(activity), PorterDuff.Mode.MULTIPLY);
     }
 
     public static void formatGenPref(PreferenceViewHolder view) {
@@ -168,7 +167,19 @@ public class UIFormatter {
     }
 
     public static void formatTextViewToTheme(TextView tv, Context context) {
-        tv.setTextColor(ThemeHelper.getThemeColorPrimaryDark(context));
+        tv.setTextColor(Preferences.getTheme().getTextViewColor(context));
+    }
+
+    public static void formatDateTextViewToTheme(TextView tv, Context context) {
+        tv.setTextColor(Preferences.getTheme().getDateTextViewColor(context));
+    }
+
+    public static void formatDescTextViewToTheme(TextView tv, Context context) {
+        tv.setTextColor(Preferences.getTheme().getDescTextViewColor(context));
+    }
+
+    public static void formatDbrTextViewToTheme(TextView tv, Context context) {
+        tv.setTextColor(Preferences.getTheme().getDbrTextViewColor(context));
     }
 
     /**
@@ -179,7 +190,7 @@ public class UIFormatter {
         TextView tvDate = activity.findViewById(R.id.tv_date);
         setMarginAndWidthAddEdit(tvDate);
         tvDate.setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
-        formatTextViewToTheme(tvDate, activity);
+        formatDateTextViewToTheme(tvDate, activity);
 
         Button btnDate = activity.findViewById(R.id.btn_date);
         setMarginAndWidthAddEdit(btnDate);
@@ -188,7 +199,7 @@ public class UIFormatter {
         TextView tvDesc = activity.findViewById(R.id.tv_desc);
         setMarginAndWidthAddEdit(tvDesc);
         tvDesc.setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
-        formatTextViewToTheme(tvDesc, activity);
+        formatDescTextViewToTheme(tvDesc, activity);
 
         EditText edtDesc = activity.findViewById(R.id.edt_desc);
         setMarginAndWidthAddEdit(edtDesc);
@@ -197,7 +208,7 @@ public class UIFormatter {
         TextView tvDbr = activity.findViewById(R.id.tv_dbr);
         setMarginAndWidthAddEdit(tvDbr);
         tvDbr.setTextSize(Preferences.getFontSize() - LARGE_OFFSET);
-        formatTextViewToTheme(tvDbr, activity);
+        formatDbrTextViewToTheme(tvDbr, activity);
 
         EditText edtDbr = activity.findViewById(R.id.edt_dbr);
         setMarginAndWidthAddEdit(edtDbr);
@@ -231,7 +242,7 @@ public class UIFormatter {
         Toolbar toolbar = homeActivity.findViewById(R.id.tb_title);
         colorHeader(homeActivity, toolbar);
         FloatingActionButton fabAdd = ((HomeActivity)activity).findViewById(R.id.btn_add);
-        fabAdd.setBackgroundTintList(ColorStateList.valueOf(ThemeHelper.getThemeColorPrimaryDark(activity)));
+        fabAdd.setBackgroundTintList(ColorStateList.valueOf(Preferences.getTheme().getFabColor(activity)));
     }
 
     public static void formatEventItem(View eventView, int prefFontSize, Context context) {
@@ -250,7 +261,9 @@ public class UIFormatter {
         View list_view = eventView.findViewById(R.id.ll_list_item);
         if(list_view == null) list_view = eventView.findViewById(R.id.list_item);
         ConstraintLayout cl_list_view = list_view.findViewById(R.id.cl_list_item);
-        cl_list_view.setBackground(ThemeHelper.getRippleDrawablePrimary(context));
+        cl_list_view.setBackground(
+                Preferences.getTheme().getItemDrawableArray(context)[0]
+        );
     }
 
     public static void formatEventItem(PreferenceViewHolder eventView, int prefFontSize, Context context) {
@@ -269,11 +282,11 @@ public class UIFormatter {
         View list_view = eventView.findViewById(R.id.ll_list_item);
         if(list_view == null) list_view = eventView.findViewById(R.id.list_item);
         ConstraintLayout cl_list_view = list_view.findViewById(R.id.cl_list_item);
-        cl_list_view.setBackground(ThemeHelper.getRippleDrawablePrimary(context));
+        cl_list_view.setBackground(Preferences.getTheme().getItemDrawableArray(context)[0]);
     }
 
     public static void colorHeader(Context context, Toolbar toolbar) {
-        toolbar.setBackgroundColor(ThemeHelper.getThemeColorPrimaryDark(context));
+        toolbar.setBackgroundColor(Preferences.getTheme().getHeaderColor(context));
     }
 
     public static void setStatusBarColor(Activity activity) {
@@ -286,7 +299,7 @@ public class UIFormatter {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
         // finally change the color
-        window.setStatusBarColor(ThemeHelper.getThemeColorPrimaryDark(activity));
+        window.setStatusBarColor(Preferences.getTheme().getStatusBarColor(activity));
     }
 
     public static class EventFormatter {
@@ -302,35 +315,30 @@ public class UIFormatter {
             holder.getTvDbr().setTextColor(color);
         }
 
-        private static void styleEventDual(Context context, Event event,
+        public static void styleEvent(Context context, Event event,
                                            EventAdapter.EventViewHolder holder) {
+            // indices into respective color/drawable arrays
+            int drawableMod = holder.getAdapterPosition() %
+                    Preferences.getTheme().getItemDrawableArray(context).length;
+            int textColorMod = holder.getAdapterPosition() %
+                    Preferences.getTheme().getItemColorArray(context).length;
+
             // a ViewHolder being selected overrides all of its other colors/styles
             if (event.isSelected()) {
-                holder.getClListItem().setBackground(ThemeHelper.getSelectedEventDrawable(context));
-                setTextViewColors(holder, ThemeHelper.getColorWhite(context));
+                holder.getClListItem().setBackground(
+                        Preferences.getTheme().getSelectedEventDrawable(context)
+                );
+                setTextViewColors(holder, Preferences.getTheme().getItemColorArray(context)[0]);
             }
             // set style based on position (alternating colors)
-            else if (holder.getAdapterPosition() % 2 == 1) {
-                holder.getClListItem().setBackground(ThemeHelper.getRippleDrawableGray(context));
-                setTextViewColors(holder, ThemeHelper.getColorDarkGray(context));
-            } else {
-                holder.getClListItem().setBackground(ThemeHelper.getRippleDrawablePrimary(context));
-                setTextViewColors(holder, ThemeHelper.getColorWhite(context));
+            else {
+                holder.getClListItem().setBackground(
+                        Preferences.getTheme().getItemDrawableArray(context)[drawableMod]
+                );
+                setTextViewColors(holder,
+                        Preferences.getTheme().getItemColorArray(context)[textColorMod]
+                );
             }
         }
-
-        public static void styleEvent(Context context, Event event,
-                                      EventAdapter.EventViewHolder holder,
-                                      String themeString) {
-            switch(themeString) {
-                case ThemeHelper.RED_VELVET:
-                case ThemeHelper.OCEAN:
-                case ThemeHelper.GRAPE:
-                case ThemeHelper.MANGO:
-                case ThemeHelper.FOREST:
-                    styleEventDual(context, event, holder);
-            }
-        }
-
     }
 }

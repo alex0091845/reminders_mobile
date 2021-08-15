@@ -101,6 +101,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         saveFile = new File(this.getFilesDir().getPath(), JsonHelper.SAVE_FILE_NAME);
+        Preferences.loadPreferences(this);
 
         // includes setting font size (formatting the home activity)
         initViews();

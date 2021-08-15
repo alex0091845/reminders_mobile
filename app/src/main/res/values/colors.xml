@@ -11,12 +11,6 @@
     <color name="gray">#D6D6D6</color>
     <color name="lightGray">#F2F2F2</color>
     <color name="selectedBlue">#03DAC5</color>
-    <color name="limeGreen">#94FFA9</color>
-    <color name="limeGreenTwo">#82F699</color>
-    <color name="pink">#FFC7C7</color>
-    <color name="yellow">#FBF780</color>
-    <color name="melrose">#9B94FF</color>
-    <color name="malibu">#B3AEFF</color>
     <color name="maliblue">#7893FF</color>
     <color name="oceanAccent">#8DA3FB</color>
     <color name="oceanPrimary">#6987FF</color>
@@ -30,4 +24,17 @@
     <color name="forestAccent">#11C055</color>
     <color name="forestPrimary">#11C055</color>
     <color name="forestPrimaryDark">#2E9543</color>
+    <color name="sherbetPurple">#C275FF</color>
+    <color name="sherbetBlue">#7691FF</color>
+    <color name="sherbetLightPink">#FFC7C7</color>
+    <color name="sherbetOrange">#EEAA54</color>
+    <color name="sherbetLightGreen">#82F699</color>
+    <color name="sherbetGreen">#77CC77</color>
+    <color name="sherbetSalmon">#FF8574</color>
+    <color name="unicornAqua">#48CBEB</color>
+    <color name="unicornSalmon">#FAB0B0</color>
+    <color name="unicornLimeGreen">#ACEFAC</color>
+    <color name="unicornPink">#FA9EF1</color>
+    <color name="unicornLemon">#F7E68B</color>
+    <color name="unicornLightPurple">#C0A5F4</color>
 </resources>

@@ -34,11 +34,24 @@
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 
-
     <style name="Forest" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/forestPrimary</item>
         <item name="colorPrimaryDark">@color/forestPrimaryDark</item>
         <item name="colorAccent">@color/forestAccent</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
+    </style>
+
+    <style name="Sherbet" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/sherbetSalmon</item>
+        <item name="colorPrimaryDark">@color/sherbetSalmon</item>
+        <item name="colorAccent">@color/sherbetSalmon</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
+    </style>
+
+    <style name="Unicorn" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/unicornAqua</item>
+        <item name="colorPrimaryDark">@color/unicornAqua</item>
+        <item name="colorAccent">@color/unicornAqua</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 
