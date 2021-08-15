@@ -243,6 +243,8 @@ public class UIFormatter {
         colorHeader(homeActivity, toolbar);
         FloatingActionButton fabAdd = ((HomeActivity)activity).findViewById(R.id.btn_add);
         fabAdd.setBackgroundTintList(ColorStateList.valueOf(Preferences.getTheme().getFabColor(activity)));
+        FloatingActionButton fabDelete = ((HomeActivity)activity).findViewById(R.id.btn_delete);
+        fabDelete.setImageTintList(ColorStateList.valueOf(Preferences.getTheme().getFabColor(activity)));
     }
 
     public static void formatEventItem(View eventView, int prefFontSize, Context context) {
