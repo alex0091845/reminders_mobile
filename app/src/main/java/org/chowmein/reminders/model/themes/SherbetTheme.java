@@ -72,4 +72,9 @@ public class SherbetTheme extends Theme {
     public int getThemeStyle() {
         return R.style.Sherbet;
     }
+
+    @Override
+    public int getEdgeEffectColor(Context context) {
+        return ContextCompat.getColor(context, R.color.sherbetPurple);
+    }
 }

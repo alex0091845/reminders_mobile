@@ -97,11 +97,12 @@ public class HomeActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Preferences.loadPreferences(this);
+        setTheme(Preferences.getTheme().getThemeStyle());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         saveFile = new File(this.getFilesDir().getPath(), JsonHelper.SAVE_FILE_NAME);
-        Preferences.loadPreferences(this);
 
         // includes setting font size (formatting the home activity)
         initViews();

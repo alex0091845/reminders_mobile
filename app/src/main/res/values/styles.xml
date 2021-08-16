@@ -9,6 +9,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:color">@color/colorPrimary</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
         <item name="buttonTint">@color/colorPrimaryDark</item>
     </style>
@@ -17,6 +18,7 @@
         <item name="colorPrimary">@color/oceanPrimaryDark</item>
         <item name="colorPrimaryDark">@color/oceanPrimaryDark</item>
         <item name="colorAccent">@color/oceanPrimaryDark</item>
+        <item name="android:color">@color/oceanPrimary</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 
@@ -24,6 +26,7 @@
         <item name="colorPrimary">@color/mangoPrimary</item>
         <item name="colorPrimaryDark">@color/mangoPrimaryDark</item>
         <item name="colorAccent">@color/mangoAccent</item>
+        <item name="android:color">@color/mangoPrimary</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 
@@ -31,6 +34,7 @@
         <item name="colorPrimary">@color/grapePrimary</item>
         <item name="colorPrimaryDark">@color/grapePrimaryDark</item>
         <item name="colorAccent">@color/grapeAccent</item>
+        <item name="android:color">@color/grapePrimary</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 
@@ -38,6 +42,7 @@
         <item name="colorPrimary">@color/forestPrimary</item>
         <item name="colorPrimaryDark">@color/forestPrimaryDark</item>
         <item name="colorAccent">@color/forestAccent</item>
+        <item name="android:color">@color/forestPrimary</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 
@@ -45,6 +50,7 @@
         <item name="colorPrimary">@color/sherbetSalmon</item>
         <item name="colorPrimaryDark">@color/sherbetSalmon</item>
         <item name="colorAccent">@color/sherbetSalmon</item>
+        <item name="android:color">@color/sherbetSalmon</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 
@@ -52,6 +58,7 @@
         <item name="colorPrimary">@color/unicornAqua</item>
         <item name="colorPrimaryDark">@color/unicornAqua</item>
         <item name="colorAccent">@color/unicornAqua</item>
+        <item name="android:color">@color/unicornAqua</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 

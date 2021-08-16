@@ -19,13 +19,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EdgeEffect;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceViewHolder;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -68,6 +71,7 @@ public class UIFormatter {
         width = dm.widthPixels;
 
         UIFormatter.setStatusBarColor(activity);
+        activity.setTheme(Preferences.getTheme().getThemeStyle());
 
         switch (activityId) {
             case HOME:
@@ -114,6 +118,11 @@ public class UIFormatter {
         SettingsActivity settingsActivity = (SettingsActivity) activity;
         View eventView = settingsActivity.findViewById(R.id.list_item);
 
+        RecyclerView rvSettings = settingsActivity.findViewById(R.id.recycler_view);
+        if(rvSettings != null) {
+            setEdgeEffect(settingsActivity, rvSettings);
+        }
+
         if(eventView != null) {
             View settingsRootView = eventView.getRootView();
             SettingsActivity.SettingsFragment fragment =
@@ -132,6 +141,18 @@ public class UIFormatter {
             formatGenPref(ringtoneViewHolder);
             formatGenPref(themeViewHolder);
         }
+    }
+
+    private static void setEdgeEffect(Context context, RecyclerView rv) {
+        rv.setEdgeEffectFactory(new RecyclerView.EdgeEffectFactory() {
+            @NonNull
+            @Override
+            protected EdgeEffect createEdgeEffect(@NonNull RecyclerView view, int direction) {
+                EdgeEffect edgeEffect = super.createEdgeEffect(view, direction);
+                edgeEffect.setColor(Preferences.getTheme().getEdgeEffectColor(context));
+                return edgeEffect;
+            }
+        });
     }
 
     public static void formatGenPrefCategory(PreferenceViewHolder holder, Context context) {
@@ -240,6 +261,8 @@ public class UIFormatter {
         TextView tvHomeYear = homeActivity.findViewById(R.id.tv_home_year);
         tvHomeYear.setTextSize(Preferences.getFontSize() - UIFormatter.MEDIUM_OFFSET);
         Toolbar toolbar = homeActivity.findViewById(R.id.tb_title);
+        RecyclerView rvReminders = homeActivity.findViewById(R.id.rv_reminders);
+        setEdgeEffect(homeActivity, rvReminders);
         colorHeader(homeActivity, toolbar);
         FloatingActionButton fabAdd = ((HomeActivity)activity).findViewById(R.id.btn_add);
         fabAdd.setBackgroundTintList(ColorStateList.valueOf(Preferences.getTheme().getFabColor(activity)));

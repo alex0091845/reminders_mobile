@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -180,6 +181,8 @@ public class SettingsActivity
             themePref.setOnPreferenceChangeListener((preference, newValue) -> {
                 Preferences.setThemeStr(newValue.toString());
                 this.getContext().setTheme(Preferences.getTheme().getThemeStyle());
+                Log.d("style", "style is ----------" + Preferences.getTheme().getThemeStyle());
+                Log.d("activity", "context is-----------" + this.getContext());
                 Preferences.prefsChanged = true;
                 preference.setSummary(newValue.toString());
                 UIFormatter.format(this.getActivity(), UIFormatter.SETTINGS);

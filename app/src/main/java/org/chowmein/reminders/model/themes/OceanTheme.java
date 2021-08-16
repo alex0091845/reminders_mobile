@@ -55,4 +55,9 @@ public class OceanTheme extends Theme {
     public int getThemeStyle() {
         return R.style.Ocean;
     }
+
+    @Override
+    public int getEdgeEffectColor(Context context) {
+        return ContextCompat.getColor(context, R.color.oceanPrimary);
+    }
 }

@@ -18,6 +18,7 @@ public abstract class Theme {
     public abstract int getSeekBarColor(Context context);
     public abstract int getTextViewColor(Context context);
     public abstract int getThemeStyle();
+    public abstract int getEdgeEffectColor(Context context);
 
     public Drawable getButtonNegativeDrawable(Context context) {
         return ContextCompat.getDrawable(context, R.drawable.ripple_gray);

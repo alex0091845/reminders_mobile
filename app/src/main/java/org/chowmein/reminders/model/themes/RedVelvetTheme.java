@@ -55,4 +55,9 @@ public class RedVelvetTheme extends Theme {
     public int getThemeStyle() {
         return R.style.AppTheme;
     }
+
+    @Override
+    public int getEdgeEffectColor(Context context) {
+        return ContextCompat.getColor(context, R.color.redVelvetPrimary);
+    }
 }

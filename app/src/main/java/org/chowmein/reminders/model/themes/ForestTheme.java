@@ -55,4 +55,9 @@ public class ForestTheme extends Theme {
     public int getThemeStyle() {
         return R.style.Forest;
     }
+
+    @Override
+    public int getEdgeEffectColor(Context context) {
+        return ContextCompat.getColor(context, R.color.forestPrimary);
+    }
 }

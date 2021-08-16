@@ -72,4 +72,9 @@ public class UnicornTheme extends Theme {
     public int getThemeStyle() {
         return R.style.Unicorn;
     }
+
+    @Override
+    public int getEdgeEffectColor(Context context) {
+        return ContextCompat.getColor(context, R.color.unicornAqua);
+    }
 }

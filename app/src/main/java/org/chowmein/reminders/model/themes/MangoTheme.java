@@ -55,4 +55,9 @@ public class MangoTheme extends Theme {
     public int getThemeStyle() {
         return R.style.Mango;
     }
+
+    @Override
+    public int getEdgeEffectColor(Context context) {
+        return ContextCompat.getColor(context, R.color.mangoPrimary);
+    }
 }
